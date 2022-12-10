@@ -12,11 +12,14 @@ app.use('/', (req, res, next) => {
   next();
 });
 
+//routes
 app.use('/user', routes.user);
 app.use('/overview', routes.overview);
 app.use('/exercise', routes.exercise);
 app.use('/nutrition', routes.nutrition);
 app.use('/report', routes.report);
+
+//error handling middelware
 app.use(error);
 
 module.exports = app;

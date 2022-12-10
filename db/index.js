@@ -6,6 +6,12 @@ const pool = new Pool({
   user: DB_USER,
   database: DB_DATABASE,
   password: DB_PASSWORD,
+  port: 5433,
+});
+
+pool.connect((err) => {
+  if (err) throw err;
+  console.log('db connected');
 });
 
 module.exports = {
