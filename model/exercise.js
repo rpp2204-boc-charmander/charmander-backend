@@ -62,11 +62,15 @@ module.exports = {
   },
 
   getUserWorkoutFromDB: async (username, log_date) => {
-    const queryString = `SELECT workout_exercises.id, users.username, exercises.exercise, log_date, est_cals_burned
-    FROM public.workout_exercises
-    JOIN users on workout_exercises.user_id=users.id
-    JOIN exercises on workout_exercises.exercise_id=exercises.id
-    WHERE username=$1 AND log_date=$2`;
+    const queryString = `SELECT we.id, u.username, e.exercise, log_date, est_cals_burned, mg.muscle_group
+                         FROM public.workout_exercises AS we
+                         JOIN users AS u
+                         ON we.user_id = u.id
+                         JOIN exercises AS e
+                         ON we.exercise_id = e.id
+                         JOIN muscle_groups AS mg
+                         ON e.muscle_group_id = mg.id
+                         WHERE username=$1 AND log_date=$2`;
 
     const params = [username, log_date];
 

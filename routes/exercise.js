@@ -24,4 +24,5 @@ router.get('/list', getUserWorkoutForDate);
 router.post('/create/set', postExerciseSet);
 router.get('/list/sets', getExerciseSet);
 
+
 module.exports = router;
