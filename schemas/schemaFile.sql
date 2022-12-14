@@ -31,23 +31,29 @@ CREATE TABLE
   );
 
 CREATE TABLE
-  goals (
+  workout_exercises (
     id SERIAL NOT NULL PRIMARY KEY,
-    exercise_position integer,
-    weight_lbs integer,
-    reps integer,
-    reps_actual integer DEFAULT 0,
     est_cals_burned integer DEFAULT 0,
-    date_id integer REFERENCES dates (id),
-    user_id integer REFERENCES users (id),
-    exercise_id integer REFERENCES exercises (id)
+    log_date DATE NOT NULL,
+    exercise_id integer REFERENCES exercises (id),
+    user_id integer REFERENCES users (id)
   );
 
 CREATE TABLE
-  burned_calories (
+  exercise_set (
     id SERIAL NOT NULL PRIMARY KEY,
-    total_cals_burned integer REFERENCES exercises (id),
-    date_id integer REFERENCES dates (id),
+    weight_lbs integer,
+    reps integer,
+    reps_actual integer DEFAULT 0,
+    workout_exercise_id integer REFERENCES workout_exercises (id)
+  );
+
+CREATE TABLE
+  daily_calories (
+    id SERIAL NOT NULL PRIMARY KEY,
+    total_cals_burned integer,
+    total_cals_gained integer,
+    log_date DATE NOT NULL,
     user_id integer REFERENCES users (id)
   );
 
@@ -142,9 +148,6 @@ VALUES
   (DEFAULT, 'Tricep Pushdown', 2, null),
   (DEFAULT, 'Dips', 2, null),
   (DEFAULT, 'Preacher Curls', 2, null),
-  (DEFAULT, 'DB Alternating Curls', 2, null),
-  (DEFAULT, 'EZ Bar Curls', 2, null),
-  (DEFAULT, 'Barbell Curls', 2, null),
   (DEFAULT, 'Tricep Kick Back', 2, null),
   (DEFAULT, 'Closegrip Bench', 2, null);
 
@@ -288,8 +291,26 @@ INSERT INTO
 VALUES
   (DEFAULT, 'Pokeball Throws', 4, 1);
 
--- INSERT
-INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
-VALUES
-  (DEFAULT, 'Pokeball Throws', 4, 1);
+-- INSERT workout exercises for daMountain for two separate days
+
+INSERT INTO public.workout_exercises(
+	log_date, exercise_id, user_id)
+	VALUES ('2022-12-13',
+			(SELECT id FROM exercises WHERE exercise='DB Alternating Curls'),
+			(SELECT id FROM users WHERE username='daMountain')),('2022-12-13',
+			(SELECT id FROM exercises WHERE exercise='Barbell Russian Twists'),
+			(SELECT id FROM users WHERE username='daMountain')),('2022-12-13',
+			(SELECT id FROM exercises WHERE exercise='Smith Machine Reverse Lunge'),
+			(SELECT id FROM users WHERE username='daMountain')),('2022-12-14',
+			(SELECT id FROM exercises WHERE exercise='Glute Kickbacks'),
+			(SELECT id FROM users WHERE username='daMountain')),('2022-12-14',
+			(SELECT id FROM exercises WHERE exercise='Barbell Squats'),
+			(SELECT id FROM users WHERE username='daMountain')),('2022-12-14',
+			(SELECT id FROM exercises WHERE exercise='Barbell Squats'),
+			(SELECT id FROM users WHERE username='daMountain'));
+
+-- INSERT sets for daMountain for workout_id=1
+
+INSERT INTO public.exercise_set(
+	weight_lbs, reps, workout_exercise_id)
+	VALUES (50, 10, 1), (50, 10, 1),(80, 20, 1), (90, 10, 1);

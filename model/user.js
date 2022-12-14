@@ -1,25 +1,23 @@
 const { query } = require('../db/index');
 
 module.exports = {
-  postFutureDatesInDB: async (next) => {
+  postFutureDatesInDB: async () => {
     const queryString = `
     INSERT INTO public.dates(log_date)
     SELECT date
-    FROM GENERATE_SERIES(CURRENT_DATE, CURRENT_DATE + INTERVAL '84 days', '1 day'::interval) date
-    EXCEPT
-    SELECT log_date from dates`;
+    FROM GENERATE_SERIES(CURRENT_DATE, CURRENT_DATE + interval '84 days', '1 day'::interval) date
+    WHERE NOT EXISTS (SELECT log_date FROM dates WHERE log_date=date)`;
 
     try {
       const result = await query(queryString);
 
       return result.rows;
     } catch (err) {
-      //note: next is being passed from the controller for the purpose of error handling using the error handler middleware that we defined in middleware/error.js
-      next(err);
+      throw err;
     }
   },
 
-  getAllDates: async (next) => {
+  getAllDates: async () => {
     const queryString = `SELECT id, log_date FROM public.dates ORDER BY log_date ASC`;
 
     try {
@@ -27,8 +25,7 @@ module.exports = {
 
       return result.rows;
     } catch (err) {
-      //note: next is being passed from the controller for the purpose of error handling using the error handler middleware that we defined in middleware/error.js
-      next(err);
+      throw err;
     }
   },
 };

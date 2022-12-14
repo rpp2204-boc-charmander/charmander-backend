@@ -5,6 +5,10 @@ const {
   getDefaultExercisesFromDB,
   getMuscleGroupsFromDB,
   getUserExercisesFromDB,
+  insertUserWorkoutExerciseInDB,
+  getUserWorkoutFromDB,
+  insertUserExerciseSetInDB,
+  getUserExerciseSetFromDB,
 } = require('../model/exercise');
 
 module.exports = {
@@ -13,14 +17,13 @@ module.exports = {
       //doing promise all to batch these async functions so they run in parallel instead of one after the other. This is for performance optimization
 
       const [exercises, muscle_groups] = await Promise.all([
-        getDefaultExercisesFromDB(next),
-        getMuscleGroupsFromDB(next),
+        getDefaultExercisesFromDB(),
+        getMuscleGroupsFromDB(),
       ]);
 
       const result = { exercises, muscle_groups };
 
-      await res.status(200).send(result);
-      next();
+      res.status(200).send(result);
     } catch (err) {
       next(err);
     }
@@ -28,12 +31,63 @@ module.exports = {
 
   getUserExercises: async (req, res, next) => {
     try {
-      const { user_id } = req.params;
+      const { username } = req.query;
 
-      const result = await getUserExercisesFromDB(user_id, next);
+      const result = await getUserExercisesFromDB(username);
 
-      await res.status(200).send(result);
-      next();
+      res.status(200).send(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  postUserWorkoutExercise: async (req, res, next) => {
+    try {
+      const { log_date, exercise } = req.body;
+
+      const { username } = req.query;
+
+      await insertUserWorkoutExerciseInDB(log_date, exercise, username);
+
+      res.sendStatus(201);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getUserWorkoutForDate: async (req, res, next) => {
+    try {
+      const { username, log_date } = req.query;
+
+      const result = await getUserWorkoutFromDB(username, log_date);
+
+      res.status(200).send(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  postExerciseSet: async (req, res, next) => {
+    try {
+      const { workout_exercise_id } = req.query;
+
+      const { weight_lbs, reps } = req.body;
+
+      await insertUserExerciseSetInDB(weight_lbs, reps, workout_exercise_id);
+
+      res.status(200).send(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getExerciseSet: async (req, res, next) => {
+    try {
+      const { workout_exercise_id } = req.query;
+
+      const result = await getUserExerciseSetFromDB(workout_exercise_id);
+
+      res.status(200).send(result);
     } catch (err) {
       next(err);
     }

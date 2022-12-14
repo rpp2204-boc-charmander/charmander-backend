@@ -7,8 +7,8 @@ module.exports = {
   getAllDates: async (req, res, next) => {
     //generate only new dates and get and return all the dates
     try {
-      await postFutureDatesInDB(next);
-      const result = await getAllDates(next);
+      await postFutureDatesInDB();
+      const result = await getAllDates();
       res.status(200).send(result);
     } catch (err) {
       next(err);
@@ -17,7 +17,7 @@ module.exports = {
 
   getDates: async (req, res, next) => {
     try {
-      const result = await postFutureDatesInDB(next);
+      const result = await postFutureDatesInDB();
       res.sendStatus(201);
     } catch (err) {
       next(err);

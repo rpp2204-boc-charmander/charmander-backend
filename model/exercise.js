@@ -1,7 +1,7 @@
 const { query } = require('../db/index');
 
 module.exports = {
-  getDefaultExercisesFromDB: async (next) => {
+  getDefaultExercisesFromDB: async () => {
     const queryString = `SELECT exercises.id AS exercise_id, exercise, muscle_group_id, muscle_group FROM exercises
     JOIN muscle_groups ON exercises.muscle_group_id=muscle_groups.id
     WHERE user_id IS NULL`;
@@ -11,12 +11,11 @@ module.exports = {
 
       return result.rows;
     } catch (err) {
-      //note: next is being passed from the controller for the purpose of error handling using the error handler middleware that we defined in middleware/error.js
-      next(err);
+      throw err;
     }
   },
 
-  getMuscleGroupsFromDB: async (next) => {
+  getMuscleGroupsFromDB: async () => {
     const queryString = `SELECT muscle_groups.id AS muscle_group_id, muscle_group FROM muscle_groups`;
 
     try {
@@ -24,25 +23,91 @@ module.exports = {
 
       return result.rows;
     } catch (err) {
-      //note: next is being passed from the controller for the purpose of error handling using the error handler middleware that we defined in middleware/error.js
-      next(err);
+      throw err;
     }
   },
 
-  getUserExercisesFromDB: async (user_id, next) => {
+  getUserExercisesFromDB: async (username) => {
     const queryString = `SELECT exercises.id AS exercise_id, exercise, muscle_group_id, muscle_group FROM exercises
     JOIN muscle_groups ON exercises.muscle_group_id=muscle_groups.id
-    WHERE user_id=$1`;
+    WHERE user_id=(SELECT id FROM users WHERE username=$1)`;
 
-    const params = [user_id];
+    const params = [username];
 
     try {
       const result = await query(queryString, params);
 
       return result.rows;
     } catch (err) {
-      //note: next is being passed from the controller for the purpose of error handling using the error handler middleware that we defined in middleware/error.js
-      next(err);
+      throw err;
+    }
+  },
+
+  insertUserWorkoutExerciseInDB: async (log_date, exercise, username) => {
+    const queryString = `INSERT INTO public.workout_exercises(
+      log_date, exercise_id, user_id)
+      VALUES ($1,
+          (SELECT id FROM exercises WHERE exercise=$2),
+          (SELECT id FROM users WHERE username=$3))`;
+
+    const params = [log_date, exercise, username];
+
+    try {
+      const result = await query(queryString, params);
+
+      return result.rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  getUserWorkoutFromDB: async (username, log_date) => {
+    const queryString = `SELECT workout_exercises.id, users.username, exercises.exercise, log_date, est_cals_burned
+    FROM public.workout_exercises
+    JOIN users on workout_exercises.user_id=users.id
+    JOIN exercises on workout_exercises.exercise_id=exercises.id
+    WHERE username=$1 AND log_date=$2`;
+
+    const params = [username, log_date];
+
+    try {
+      const result = await query(queryString, params);
+
+      return result.rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  insertUserExerciseSetInDB: async (weight_lbs, reps, workout_exercise_id) => {
+    const queryString = `INSERT INTO public.exercise_set(
+      weight_lbs, reps, workout_exercise_id)
+      VALUES ($1, $2, $3)`;
+
+    const params = [weight_lbs, reps, workout_exercise_id];
+
+    try {
+      const result = await query(queryString, params);
+
+      return result.rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  getUserExerciseSetFromDB: async (workout_exercise_id) => {
+    const queryString = `SELECT id AS set_id, weight_lbs, reps, reps_actual, workout_exercise_id
+    FROM public.exercise_set
+    WHERE workout_exercise_id=$1`;
+
+    const params = [workout_exercise_id];
+
+    try {
+      const result = await query(queryString, params);
+
+      return result.rows;
+    } catch (err) {
+      throw err;
     }
   },
 };
