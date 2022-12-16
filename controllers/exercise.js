@@ -43,9 +43,7 @@ module.exports = {
 
   postUserWorkoutExercise: async (req, res, next) => {
     try {
-      const { log_date, exercise } = req.body;
-
-      const { username } = req.query;
+      const { username, log_date, exercise } = req.query;
 
       await insertUserWorkoutExerciseInDB(log_date, exercise, username);
 
@@ -69,13 +67,11 @@ module.exports = {
 
   postExerciseSet: async (req, res, next) => {
     try {
-      const { workout_exercise_id } = req.query;
-
-      const { weight_lbs, reps } = req.body;
+      const { weight_lbs, reps, workout_exercise_id } = req.query;
 
       await insertUserExerciseSetInDB(weight_lbs, reps, workout_exercise_id);
 
-      res.status(200).send(result);
+      res.sendStatus(201);
     } catch (err) {
       next(err);
     }
