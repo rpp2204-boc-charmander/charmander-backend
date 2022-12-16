@@ -62,15 +62,26 @@ module.exports = {
   },
 
   getUserWorkoutFromDB: async (username, log_date) => {
-    const queryString = `SELECT we.id, u.username, e.exercise, log_date, est_cals_burned, mg.muscle_group
-                         FROM public.workout_exercises AS we
-                         JOIN users AS u
-                         ON we.user_id = u.id
-                         JOIN exercises AS e
-                         ON we.exercise_id = e.id
-                         JOIN muscle_groups AS mg
-                         ON e.muscle_group_id = mg.id
-                         WHERE username=$1 AND log_date=$2`;
+    const queryString = `SELECT we.id,
+                                we.est_cals_burned,
+                                we.log_date,
+                                e.exercise,
+                                u.username,
+                                mg.muscle_group,
+                                COALESCE(JSON_AGG(JSON_BUILD_OBJECT(
+                                  'set_id', es.id,
+                                  'weight_lbs', es.weight_lbs,
+                                  'reps', es.reps,
+                                  'reps_actual', es.reps_actual,
+                                  'workout_id', es.workout_exercise_id
+                                )) FILTER (WHERE reps IS NOT null), '[]'::json ) AS sets
+                          FROM workout_exercises AS we
+                          LEFT JOIN exercise_set AS es ON we.id = es.workout_exercise_id
+                          JOIN exercises AS e ON e.id = we.exercise_id
+                          JOIN users AS u ON u.id = we.user_id
+                          JOIN muscle_groups AS mg ON mg.id = e.muscle_group_id
+                          WHERE username = $1 AND log_date=$2
+                          GROUP BY we.id, e.exercise, u.username, mg.muscle_group`;
 
     const params = [username, log_date];
 
@@ -101,8 +112,8 @@ module.exports = {
 
   getUserExerciseSetFromDB: async (workout_exercise_id) => {
     const queryString = `SELECT id AS set_id, weight_lbs, reps, reps_actual, workout_exercise_id
-    FROM public.exercise_set
-    WHERE workout_exercise_id=$1`;
+                         FROM public.exercise_set
+                         WHERE workout_exercise_id=$1`;
 
     const params = [workout_exercise_id];
 
