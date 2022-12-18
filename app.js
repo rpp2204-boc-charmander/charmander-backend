@@ -11,7 +11,6 @@ const cors = require('cors');
 if (ENV === 'production') db.testConnection();
 
 
-const app = express();
 app.use(express.json());
 app.use(cors());
 
