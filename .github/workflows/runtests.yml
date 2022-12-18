@@ -25,23 +25,19 @@ jobs:
           echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Start db container from compose file
-        run: docker compose -p test run --rm charmander_backend npm run test
+        run: docker compose up -d
 
-      # - name: Start db container from compose file
-      #   run: docker compose up -d
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
-      # - name: Install node
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: ${{ matrix.node-version }}
-      #     cache: 'npm'
+      - name: Install dependencies
+        run: npm i --frozen-lockfile
 
-      # - name: Install dependencies
-      #   run: npm i --frozen-lockfile
+      - name: Run tests
+        run: npm test
 
-      # - name: Run tests
-      #   run: npm test
-
-      # - name: Stop containers
-      #   if: always()
-      #   run: docker compose down
+      - name: Stop containers
+        run: docker compose down
