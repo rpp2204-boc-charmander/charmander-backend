@@ -10,6 +10,3 @@ services:
       - 5432:5432
     volumes:
       - ./schemas/schemaFile.sql:/docker-entrypoint-initdb.d/schemaFile.sql
-
-
-
