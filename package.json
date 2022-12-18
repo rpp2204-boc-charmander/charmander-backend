@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node appListen.js",
     "server-dev": "nodemon appListen.js",
-    "test": "jest --detectOpenHandles",
-    "test:watch": "npm run test -- --watch"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
