@@ -13,7 +13,7 @@ const {
 } = controller.exercise;
 
 //add more sub routes here. See app.js for main route
-router.get('/default/list/test', getDefaultExercises);
+router.get('/default/list', getDefaultExercises);
 router.get('/custom/list', getUserExercises); //query params: username
 
 //take care of workout exercises
