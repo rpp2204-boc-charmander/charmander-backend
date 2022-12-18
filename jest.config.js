@@ -1,7 +1,6 @@
 module.exports = {
-  preset: '@shelf/jest-mongodb',
   collectCoverage: true,
-  collectCoverageFrom: ['./server/**'],
+  collectCoverageFrom: ['.__tests__/**'],
   coverageThreshold: {
     global: {
       lines: 60,

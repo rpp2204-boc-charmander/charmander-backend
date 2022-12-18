@@ -1,0 +1,46 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - name: create env file
+        run: |
+          touch .env
+          echo DB_USER=${{ secrets.DB_USER }}
+          echo DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          echo DB_DATABASE=${{ secrets.DB_DATABASE }} >> .env
+
+      - name: Checkout
+      - uses: actions/checkout@v3
+
+      - name: Start db container from compose file
+        run: docker compose up -d
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm i --frozen-lockfile
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Stop containers
+        if: always()
+        run: docker compose down

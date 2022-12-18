@@ -14,7 +14,7 @@ const db = Promise.promisifyAll(pool);
 
 db.connectAsync()
   .then(() => console.log('db connected'))
-  .catch(() => console.log('error connecting to db'));
+  .catch((err) => console.log('error connecting to db: ', err));
 
 module.exports = {
   query: (text, params) => {
