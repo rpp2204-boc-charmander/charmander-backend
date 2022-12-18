@@ -26,9 +26,9 @@ describe('Exercise API', () => {
         //     expect(res.body.muscle_groups).toEqual(exerciseList.muscle_groups);
         //   });
 
-        it('test failure', async () => {
-          expect().toEqual([]);
-        });
+        // it('test failure', async () => {
+        //   expect().toEqual([]);
+        // });
       });
     });
   });
