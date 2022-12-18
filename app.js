@@ -1,11 +1,17 @@
 const express = require('express');
 const error = require('./middleware/error');
 const routes = require('./routes/index');
-const db = require('./db/');
+const db = require('./db');
+const { ENV } = require('./config');
+
 
 const app = express();
 const cors = require('cors');
 
+if (ENV === 'production') db.testConnection();
+
+
+const app = express();
 app.use(express.json());
 app.use(cors());
 
