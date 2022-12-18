@@ -3,8 +3,12 @@ const axios = require('axios');
 const { exerciseList } = require('../__mocks__/exercise');
 const request = require('supertest');
 const app = require('../app');
+const db = require('../db');
 
 describe('Exercise API', () => {
+  afterAll(async () => {
+    await db.end();
+  });
   describe('GET ', () => {
     describe('when user searches for default exercises', () => {
       describe('should return list of defualt exercises with list of muscle groups', () => {

@@ -1,6 +1,5 @@
 const { DB_HOST, DB_USER, DB_DATABASE, DB_PASSWORD } = require('../config');
 const { Pool } = require('pg');
-const Promise = require('bluebird');
 
 const pool = new Pool({
   host: DB_HOST,
@@ -10,14 +9,19 @@ const pool = new Pool({
   port: 5432,
 });
 
-const db = Promise.promisifyAll(pool);
-
-db.connectAsync()
-  .then(() => console.log('db connected'))
-  .catch((err) => console.log('error connecting to db: ', err));
-
 module.exports = {
   query: (text, params) => {
-    return db.queryAsync(text, params);
+    return pool.query(text, params);
+  },
+  end: () => {
+    return pool.end();
+  },
+  testConnection: async () => {
+    try {
+      const res = await pool.query('SELECT NOW()');
+      console.log('db is conencted');
+    } catch (error) {
+      console.log('error connecting to db');
+    }
   },
 };

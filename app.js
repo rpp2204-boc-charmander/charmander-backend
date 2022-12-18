@@ -1,10 +1,12 @@
 const express = require('express');
 const error = require('./middleware/error');
 const routes = require('./routes/index');
-const db = require('./db/');
+const db = require('./db');
+const { ENV } = require('./config');
+
+if (ENV === 'production') db.testConnection();
 
 const app = express();
-
 app.use(express.json());
 
 app.use('/', (req, res, next) => {
