@@ -15,7 +15,7 @@ describe('Exercise API', () => {
         it('should respond with 200 status', async () => {
           const res = await request(app).get('/exercise/default/list');
 
-          expect(res.statusCode).toBe(201);
+          expect(res.statusCode).toBe(200);
         });
 
         //   it('should return default exercise list', async () => {

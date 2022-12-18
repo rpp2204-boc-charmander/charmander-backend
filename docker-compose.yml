@@ -10,23 +10,24 @@ services:
       - 5432:5432
     volumes:
       - ./schemas/schemaFile.sql:/docker-entrypoint-initdb.d/schemaFile.sql
-  #   healthcheck:
-  #     test: [ "CMD-SHELL", "pg_isready" ]
-  #     interval: 5s
-  #     timeout: 5s
-  #     retries: 5
-  # charmander_backend:
-  #     depends_on:
-  #       db:
-  #         condition: service_healthy
-  #     build: .
-  #     environment:
-  #       - PORT=${PORT}
-  #       - DB_HOST=${DB_HOST}
-  #       - DB_USER=${DB_USER}
-  #       - DB_DATABASE=${DB_DATABASE}
-  #       - DB_PASSWORD=${DB_PASSWORD}
-  #     ports:
-  #       - 3000:3000
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  charmander_backend:
+      container_name: backend_app
+      depends_on:
+        db:
+          condition: service_healthy
+      image: rickyp00/charmander-back-end:latest
+      environment:
+        - PORT=${PORT}
+        - DB_HOST=${DB_HOST}
+        - DB_USER=${DB_USER}
+        - DB_DATABASE=${DB_DATABASE}
+        - DB_PASSWORD=${DB_PASSWORD}
+      ports:
+        - 3000:3000
 
 
