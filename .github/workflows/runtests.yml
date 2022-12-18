@@ -37,7 +37,7 @@ jobs:
         run: npm i --frozen-lockfile
 
       - name: Run tests
-        run: npm test | exit 1
+        run: npm test
 
       - name: Stop containers
         run: docker compose down
