@@ -7,7 +7,7 @@ const pool = new Pool({
   user: DB_USER,
   database: DB_DATABASE,
   password: DB_PASSWORD,
-  port: 5433,
+  port: 5432,
 });
 
 const db = Promise.promisifyAll(pool);
