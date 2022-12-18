@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Integration tests CI
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
           echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Start db container from compose file
-        run: docker compose -f "docker-compose-ci.yml" run
+        run: docker compose -f docker-compose-ci.yml up -d
 
       - name: Install node
         uses: actions/setup-node@v3
