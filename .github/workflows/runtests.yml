@@ -39,6 +39,6 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Stop containers
-        if: always()
-        run: docker compose down
+      # - name: Stop containers
+      #   if: always()
+      #   run: docker compose down
