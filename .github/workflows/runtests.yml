@@ -24,7 +24,7 @@ jobs:
           echo DB_DATABASE=${{ secrets.DB_DATABASE }} >> .env
 
       - name: Checkout
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Start db container from compose file
         run: docker compose up -d
