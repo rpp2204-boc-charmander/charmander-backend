@@ -125,4 +125,34 @@ module.exports = {
       throw err;
     }
   },
+
+  deleteExerciseSetFromDB: async (set_id) => {
+    const queryString = `DELETE FROM exercise_set WHERE id = $1`
+
+    const params = [set_id];
+
+    try {
+      const result = await query(queryString, params);
+
+      return;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  deleteWorkoutFromDB: async (workout_exercise_id) => {
+    const queryString1 = `DELETE FROM workout_exercises WHERE id = $1`;
+    const queryString2 = `DELETE FROM exercise_set WHERE workout_exercise_id = $1`;
+
+    const params = [workout_exercise_id];
+
+    try {
+      const deleteSets = await query(queryString2, params);
+      const deleteWorkout = await query(queryString1, params);
+
+      return;
+    } catch (err) {
+      throw err;
+    }
+  }
 };

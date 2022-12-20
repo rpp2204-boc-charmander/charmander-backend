@@ -9,6 +9,8 @@ const {
   getUserWorkoutFromDB,
   insertUserExerciseSetInDB,
   getUserExerciseSetFromDB,
+  deleteExerciseSetFromDB,
+  deleteWorkoutFromDB
 } = require('../model/exercise');
 
 module.exports = {
@@ -88,4 +90,28 @@ module.exports = {
       next(err);
     }
   },
+
+  deleteExerciseSet: async (req, res, next) => {
+    try {
+      const { set_id } = req.query;
+
+      const result = await deleteExerciseSetFromDB(set_id);
+
+      res.status(200).send(`Successfully Deleted Set ${set_id}`)
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  deleteWorkout: async (req, res, next) => {
+    try {
+      const { workout_exercise_id } = req.query;
+
+      const result = await deleteWorkoutFromDB(workout_exercise_id);
+
+      res.status(200).send(`Successfully Deleted Workout ${workout_exercise_id}`)
+    } catch (err) {
+      next(err);
+    }
+  }
 };
