@@ -1,12 +1,11 @@
 module.exports = {
-  preset: '@shelf/jest-mongodb',
+  testEnvironment: 'node',
   collectCoverage: true,
-  collectCoverageFrom: ['./server/**'],
+  collectCoverageFrom: ['.__tests__/**'],
   coverageThreshold: {
     global: {
       lines: 60,
     },
   },
   coverageDirectory: 'coverage',
-  globalTeardown: './test-teardown-globals.js',
 };

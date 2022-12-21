@@ -1,4 +1,4 @@
-const { query } = require('../db/index');
+const db = require('../db');
 
 module.exports = {
   getDefaultExercisesFromDB: async () => {
@@ -7,7 +7,7 @@ module.exports = {
     WHERE user_id IS NULL`;
 
     try {
-      const result = await query(queryString);
+      const result = await db.query(queryString);
 
       return result.rows;
     } catch (err) {
@@ -19,7 +19,7 @@ module.exports = {
     const queryString = `SELECT muscle_groups.id AS muscle_group_id, muscle_group FROM muscle_groups`;
 
     try {
-      const result = await query(queryString);
+      const result = await db.query(queryString);
 
       return result.rows;
     } catch (err) {

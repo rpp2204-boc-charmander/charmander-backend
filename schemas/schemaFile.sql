@@ -36,6 +36,7 @@ CREATE TABLE
     est_cals_burned integer DEFAULT 0,
     log_date DATE NOT NULL,
     exercise_id integer REFERENCES exercises (id),
+    is_complete boolean DEFAULT false,
     user_id integer REFERENCES users (id)
   );
 
