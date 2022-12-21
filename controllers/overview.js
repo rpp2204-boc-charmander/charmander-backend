@@ -4,7 +4,7 @@
 const {
   getDailyCaloriesFromDB,
   getDailyExerciseFromDB,
-  getDailyNutritionFromDB
+  getDailyNutritionFromDB,
 } = require('../model/overview');
 
 module.exports = {
@@ -13,12 +13,14 @@ module.exports = {
       let { date } = req.query;
       if (date === undefined) {
         let today = new Date();
-        date = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+        date = `${today.getFullYear()}-${
+          today.getMonth() + 1
+        }-${today.getDate()}`;
       }
       const result = await getDailyCaloriesFromDB(date);
       res.status(200).send(result);
     } catch (err) {
-      next (err);
+      next(err);
     }
   },
 
@@ -27,20 +29,22 @@ module.exports = {
       let { date } = req.query;
       if (date === undefined) {
         let today = new Date();
-        date = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+        date = `${today.getFullYear()}-${
+          today.getMonth() + 1
+        }-${today.getDate()}`;
       }
       const result = await getDailyExerciseFromDB(date);
-      let output = []
+      let output = [];
 
-      result.map(item => {
+      result.map((item) => {
         let obj = {};
-        obj["text"] = item.exercise;
-        obj["calorie"] = item.est_cals_burned;
+        obj['text'] = item.exercise;
+        obj['calorie'] = item.est_cals_burned;
         output.push(obj);
-      })
+      });
       res.status(200).send(output);
     } catch (err) {
-      next (err);
+      next(err);
     }
   },
 
@@ -49,12 +53,14 @@ module.exports = {
       let { date } = req.query;
       if (date === undefined) {
         let today = new Date();
-        date = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+        date = `${today.getFullYear()}-${
+          today.getMonth() + 1
+        }-${today.getDate()}`;
       }
       const result = await getDailyNutritionFromDB(date);
       res.status(200).send(result);
     } catch (err) {
-      next (err);
+      next(err);
     }
-  }
+  },
 };

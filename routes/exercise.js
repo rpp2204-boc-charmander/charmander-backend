@@ -5,6 +5,7 @@ const controller = require('../controllers');
 //add your controllers to this object
 const {
   getDefaultExercises,
+  postUserCustomExercise,
   getUserExercises,
   postUserWorkoutExercise,
   getUserWorkoutForDate,
@@ -12,9 +13,12 @@ const {
   getExerciseSet,
 } = controller.exercise;
 
-//add more sub routes here. See app.js for main route
+//searching for exercises
 router.get('/default/list', getDefaultExercises);
 router.get('/custom/list', getUserExercises); //query params: username
+
+//making custom exercise
+router.post('/custom/create', postUserCustomExercise); //query params: username
 
 //take care of workout exercises
 router.post('/create', postUserWorkoutExercise); //query params: username, log_date, exercise

@@ -1,13 +1,16 @@
-const db = require('../db');
+const { query } = require('../db');
 
 module.exports = {
+  //////////////////////////
+  //searching for exercises
+  //////////////////////////
   getDefaultExercisesFromDB: async () => {
     const queryString = `SELECT exercises.id AS exercise_id, exercise, muscle_group_id, muscle_group FROM exercises
     JOIN muscle_groups ON exercises.muscle_group_id=muscle_groups.id
     WHERE user_id IS NULL`;
 
     try {
-      const result = await db.query(queryString);
+      const result = await query(queryString);
 
       return result.rows;
     } catch (err) {
@@ -19,8 +22,31 @@ module.exports = {
     const queryString = `SELECT muscle_groups.id AS muscle_group_id, muscle_group FROM muscle_groups`;
 
     try {
-      const result = await db.query(queryString);
+      const result = await query(queryString);
 
+      return result.rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  //////////////////////////
+  //creating custom exercises
+  //////////////////////////
+
+  insertUserCustomExerciseInDB: async (
+    custom_exercise,
+    muscle_group,
+    username
+  ) => {
+    const queryString = `INSERT INTO public.exercises(
+      exercise, muscle_group_id, user_id)
+      VALUES ($1,(SELECT id FROM muscle_groups WHERE muscle_group=$2), (SELECT id FROM users WHERE username=$3))`;
+
+    const params = [custom_exercise, muscle_group, username];
+
+    try {
+      const result = await query(queryString, params);
       return result.rows;
     } catch (err) {
       throw err;
@@ -36,7 +62,6 @@ module.exports = {
 
     try {
       const result = await query(queryString, params);
-
       return result.rows;
     } catch (err) {
       throw err;

@@ -1,9 +1,11 @@
 //add your controllers here
 //make sure you do error handling like so
 //if you take care of errors like the below example, the error middleware will take care of the error for you
+const { user } = require('.');
 const {
   getDefaultExercisesFromDB,
   getMuscleGroupsFromDB,
+  insertUserCustomExerciseInDB,
   getUserExercisesFromDB,
   insertUserWorkoutExerciseInDB,
   getUserWorkoutFromDB,
@@ -33,9 +35,27 @@ module.exports = {
     try {
       const { username } = req.query;
 
+      console.log(username);
+
       const result = await getUserExercisesFromDB(username);
 
       res.status(200).send(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  postUserCustomExercise: async (req, res, next) => {
+    try {
+      const { custom_exercise, muscle_group, username } = req.query;
+
+      await insertUserCustomExerciseInDB(
+        custom_exercise,
+        muscle_group,
+        username
+      );
+
+      res.sendStatus(201);
     } catch (err) {
       next(err);
     }
