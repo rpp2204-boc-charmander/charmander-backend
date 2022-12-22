@@ -1,10 +1,11 @@
 CREATE TABLE
   users (
     id SERIAL NOT NULL PRIMARY KEY,
+    auth_id VARCHAR(200) DEFAULT null,
     firstname VARCHAR(50),
     lastname VARCHAR(50),
     email VARCHAR(20),
-    password VARCHAR(20),
+    user_password VARCHAR(20),
     weight_lbs integer,
     height_inches integer,
     sex VARCHAR(50)
@@ -22,12 +23,6 @@ CREATE TABLE
     exercise VARCHAR(50),
     muscle_group_id integer REFERENCES muscle_groups (id),
     user_id integer REFERENCES users (id) ON DELETE CASCADE DEFAULT null
-  );
-
-CREATE TABLE
-  dates (
-    id SERIAL NOT NULL PRIMARY KEY,
-    log_date DATE NOT NULL DEFAULT CURRENT_DATE
   );
 
 CREATE TABLE
@@ -57,7 +52,6 @@ CREATE TABLE
     log_date DATE NOT NULL,
     user_id integer REFERENCES users (id) ON DELETE CASCADE
   );
-
 
 -- INSERT default muscle groups
 INSERT INTO
