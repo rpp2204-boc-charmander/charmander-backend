@@ -26,7 +26,7 @@ module.exports = {
       ON
         workout_exercises.exercise_id = exercises.id
       WHERE
-        workout_exercises.log_date=$1;`
+        workout_exercises.log_date=$1;`;
 
     try {
       const result = await query(queryString, params);
@@ -45,5 +45,5 @@ module.exports = {
     } catch (err) {
       throw err;
     }
-  }
+  },
 };
