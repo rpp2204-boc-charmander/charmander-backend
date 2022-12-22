@@ -35,15 +35,15 @@ module.exports = {
   //////////////////////////
 
   insertUserCustomExerciseInDB: async (
+    user_id,
     custom_exercise,
-    muscle_group,
-    username
+    muscle_group_id
   ) => {
-    const queryString = `INSERT INTO public.exercises(
+    const queryString = `INSERT INTO exercises(
       exercise, muscle_group_id, user_id)
-      VALUES ($1,(SELECT id FROM muscle_groups WHERE muscle_group=$2), (SELECT id FROM users WHERE username=$3))`;
+      VALUES ($1,$2, $3)`;
 
-    const params = [custom_exercise, muscle_group, username];
+    const params = [custom_exercise, muscle_group_id, user_id];
 
     try {
       const result = await query(queryString, params);
@@ -53,12 +53,12 @@ module.exports = {
     }
   },
 
-  getUserExercisesFromDB: async (username) => {
+  getUserExercisesFromDB: async (user_id) => {
     const queryString = `SELECT exercises.id AS exercise_id, exercise, muscle_group_id, muscle_group FROM exercises
     JOIN muscle_groups ON exercises.muscle_group_id=muscle_groups.id
-    WHERE user_id=(SELECT id FROM users WHERE username=$1)`;
+    WHERE user_id=$1`;
 
-    const params = [username];
+    const params = [user_id];
 
     try {
       const result = await query(queryString, params);
@@ -68,14 +68,12 @@ module.exports = {
     }
   },
 
-  insertUserWorkoutExerciseInDB: async (log_date, exercise, username) => {
+  insertUserWorkoutExerciseInDB: async (log_date, exercise_id, user_id) => {
     const queryString = `INSERT INTO public.workout_exercises(
       log_date, exercise_id, user_id)
-      VALUES ($1,
-          (SELECT id FROM exercises WHERE exercise=$2),
-          (SELECT id FROM users WHERE username=$3))`;
+      VALUES ($1, $2, $3)`;
 
-    const params = [log_date, exercise, username];
+    const params = [log_date, exercise_id, user_id];
 
     try {
       const result = await query(queryString, params);
@@ -86,14 +84,14 @@ module.exports = {
     }
   },
 
-  getUserWorkoutFromDB: async (username, log_date) => {
-    const queryString = `SELECT workout_exercises.id, users.username, exercises.exercise, log_date, est_cals_burned
+  getUserWorkoutFromDB: async (user_id, log_date) => {
+    const queryString = `SELECT workout_exercises.id AS exercise_id, exercises.exercise, est_cals_burned
     FROM public.workout_exercises
     JOIN users on workout_exercises.user_id=users.id
     JOIN exercises on workout_exercises.exercise_id=exercises.id
-    WHERE username=$1 AND log_date=$2`;
+    WHERE users.id=$1 AND log_date=$2`;
 
-    const params = [username, log_date];
+    const params = [user_id, log_date];
 
     try {
       const result = await query(queryString, params);
@@ -126,6 +124,39 @@ module.exports = {
     WHERE workout_exercise_id=$1`;
 
     const params = [workout_exercise_id];
+
+    try {
+      const result = await query(queryString, params);
+
+      return result.rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  deleteCustomExerciseFromDB: async (user_id, exercise_id) => {
+    const queryString = `DELETE FROM public.exercises
+    WHERE user_id=$1
+    AND exercises.id=$2`;
+
+    const params = [user_id, exercise_id];
+
+    try {
+      const result = await query(queryString, params);
+
+      return result.rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  deleteUserWorkoutExerciseFromDB: async (exercise_id, user_id, log_date) => {
+    const queryString = `DELETE FROM public.workout_exercises
+    WHERE exercise_id=$1
+    AND user_id=$2
+    AND log_date=$3`;
+
+    const params = [exercise_id, user_id, log_date];
 
     try {
       const result = await query(queryString, params);

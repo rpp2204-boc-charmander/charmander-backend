@@ -3,7 +3,7 @@ CREATE TABLE
     id SERIAL NOT NULL PRIMARY KEY,
     firstname VARCHAR(50),
     lastname VARCHAR(50),
-    username VARCHAR(20),
+    email VARCHAR(20),
     password VARCHAR(20),
     weight_lbs integer,
     height_inches integer,
@@ -58,55 +58,6 @@ CREATE TABLE
     user_id integer REFERENCES users (id) ON DELETE CASCADE
   );
 
--- INSERT default users
-INSERT INTO
-  public.users (
-    firstname,
-    lastname,
-    username,
-    password,
-    weight_lbs,
-    height_inches,
-    sex
-  )
-VALUES
-  (
-    'Ash',
-    'Ketchum',
-    'pika2',
-    '123',
-    160,
-    65,
-    'male'
-  ),
-  (
-    'Tom',
-    'Cruise',
-    'maverick123',
-    '123',
-    150,
-    67,
-    'male'
-  ),
-  (
-    'Britney',
-    'Spears',
-    'babybaby5',
-    '123',
-    130,
-    64,
-    'female'
-  ),
-  (
-
-    'Hafthor',
-    'Bjornsson',
-    'daMountain',
-    '123',
-    335,
-    81,
-    'male'
-  );
 
 -- INSERT default muscle groups
 INSERT INTO
@@ -246,7 +197,7 @@ VALUES
 ('Smith Machine Calf Raise', 9),
 ('Seated Calf Raise', 9);
 
--- INSERT custom exercises for Abs
+-- INSERT default exercises for Abs
 INSERT INTO
   public.exercises (exercise, muscle_group_id)
 VALUES
@@ -256,58 +207,3 @@ VALUES
   ( 'Weighted Situps', 10),
   ( 'Front Plank', 10);
 
--- INSERT custom exercises for daMountain
-INSERT INTO
-  public.exercises (exercise, muscle_group_id, user_id)
-VALUES
-  ( 'Farmers walk', 5, (SELECT id from users WHERE username='daMountain')),
-  ( 'Car Deadlift', 6, (SELECT id from users WHERE username='daMountain')),
-  ( 'Sled Pull', 5, (SELECT id from users WHERE username='daMountain')),
-  ( 'Monster Dumbbell Press', 4, (SELECT id from users WHERE username='daMountain'));
-
--- INSERT custom exercises for Britney
-INSERT INTO
-  public.exercises (exercise, muscle_group_id, user_id)
-VALUES
-  ( 'Stone Throws', 4, (SELECT id from users WHERE username='babybaby5')),
-  ( 'Upside down lats pulls', 5, (SELECT id from users WHERE username='babybaby5')),
-  ( 'one legged bench press', 3, (SELECT id from users WHERE username='babybaby5')),
-  ( 'Vader raises', 4, (SELECT id from users WHERE username='babybaby5'));
-
--- INSERT custom exercises for Tom maverick123
-INSERT INTO
-  public.exercises (exercise, muscle_group_id, user_id)
-VALUES
-  ( 'Belly Flops', 10, (SELECT id from users WHERE username='maverick123')),
-  ( 'Helicopter Jump', 7, (SELECT id from users WHERE username='maverick123')),
-  ( 'Drone Swings', 10, (SELECT id from users WHERE username='maverick123'));
-
--- INSERT custom exercises for Ash pika2
-INSERT INTO
-  public.exercises (exercise, muscle_group_id, user_id)
-VALUES
-  ( 'Pokeball Throws', 4, (SELECT id from users WHERE username='pika2'));
-
--- INSERT workout exercises for daMountain for two separate days
-
-INSERT INTO public.workout_exercises(
-	log_date, exercise_id, user_id)
-	VALUES ('2022-12-13',
-			(SELECT id FROM exercises WHERE exercise='DB Alternating Curls'),
-			(SELECT id FROM users WHERE username='daMountain')),('2022-12-13',
-			(SELECT id FROM exercises WHERE exercise='Barbell Russian Twists'),
-			(SELECT id FROM users WHERE username='daMountain')),('2022-12-13',
-			(SELECT id FROM exercises WHERE exercise='Smith Machine Reverse Lunge'),
-			(SELECT id FROM users WHERE username='daMountain')),('2022-12-14',
-			(SELECT id FROM exercises WHERE exercise='Glute Kickbacks'),
-			(SELECT id FROM users WHERE username='daMountain')),('2022-12-14',
-			(SELECT id FROM exercises WHERE exercise='Barbell Squats'),
-			(SELECT id FROM users WHERE username='daMountain')),('2022-12-14',
-			(SELECT id FROM exercises WHERE exercise='Barbell Squats'),
-			(SELECT id FROM users WHERE username='daMountain'));
-
--- INSERT sets for daMountain for workout_id=1
-
-INSERT INTO public.exercise_set(
-	weight_lbs, reps, workout_exercise_id)
-	VALUES (50, 10, 1), (50, 10, 1),(80, 20, 1), (90, 10, 1);
