@@ -37,8 +37,6 @@ module.exports = {
   getUser: async (req, res, next) => {
     const { auth_id } = req.params;
 
-    console.log('test test test: ', auth_id);
-
     try {
       const result = await selectUserFromDB(auth_id);
 
