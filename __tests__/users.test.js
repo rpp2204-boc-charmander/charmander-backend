@@ -70,12 +70,13 @@ describe('Users API', () => {
         }
       });
 
-      it('should get user id ', async () => {
+      it('should get user id', async () => {
         const res = await request(app).get(`/user/${auth_id}/`);
 
         expect(res.statusCode).toBe(200);
         expect(res.body).toMatchObject(newUserInfo);
         expect(res.body.user_id).toEqual(user_id);
+        expect(res.body.auth_id).toEqual(auth_id);
       });
     });
   });
@@ -84,22 +85,9 @@ describe('Users API', () => {
     describe('make a new user', () => {
       afterAll(async () => {
         const queryString = `DELETE FROM public.users
-        WHERE firstname=$1
-        AND lastname=$2
-        AND email=$3
-        AND user_password=$4
-        AND weight_lbs=$5
-        AND height_inches=$6
-        AND sex=$7`;
-        const params = [
-          firstname,
-          lastname,
-          email,
-          user_password,
-          weight_lbs,
-          height_inches,
-          sex,
-        ];
+        WHERE auth_id=$1`;
+
+        const params = [auth_id];
 
         let retriveFromdb;
         try {

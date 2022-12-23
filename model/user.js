@@ -33,12 +33,15 @@ module.exports = {
     }
   },
 
-  selectUserFromDB: async () => {
+  selectUserFromDB: async (auth_id) => {
     const queryString = `SELECT id AS user_id, auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex
-    FROM public.users`;
+    FROM public.users
+    WHERE auth_id=$1`;
+
+    const params = [auth_id];
 
     try {
-      const result = await query(queryString);
+      const result = await query(queryString, params);
 
       return result.rows[0];
     } catch (err) {
