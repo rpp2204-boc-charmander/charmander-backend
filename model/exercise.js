@@ -90,7 +90,6 @@ module.exports = {
                                 we.est_cals_burned,
                                 we.log_date,
                                 e.exercise,
-                                u.username,
                                 mg.muscle_group,
                                 COALESCE(JSON_AGG(JSON_BUILD_OBJECT(
                                   'set_id', es.id,
@@ -105,7 +104,7 @@ module.exports = {
                           JOIN users AS u ON u.id = we.user_id
                           JOIN muscle_groups AS mg ON mg.id = e.muscle_group_id
                           WHERE u.id = $1 AND log_date=$2
-                          GROUP BY we.id, e.exercise, u.username, mg.muscle_group`;
+                          GROUP BY we.id, e.exercise, mg.muscle_group`;
 
     const params = [user_id, log_date];
 
