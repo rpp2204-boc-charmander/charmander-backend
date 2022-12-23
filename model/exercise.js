@@ -35,7 +35,7 @@ module.exports = {
     const params = [username];
 
     try {
-      const result = await query(queryString, params);
+      const result = await db.query(queryString, params);
 
       return result.rows;
     } catch (err) {
@@ -53,7 +53,7 @@ module.exports = {
     const params = [log_date, exercise, username];
 
     try {
-      const result = await query(queryString, params);
+      const result = await db.query(queryString, params);
 
       return result.rows;
     } catch (err) {
@@ -86,7 +86,8 @@ module.exports = {
     const params = [username, log_date];
 
     try {
-      const result = await query(queryString, params);
+
+      const result = await db.query(queryString, params);
 
       return result.rows;
     } catch (err) {
@@ -102,7 +103,7 @@ module.exports = {
     const params = [weight_lbs, reps, workout_exercise_id];
 
     try {
-      const result = await query(queryString, params);
+      const result = await db.query(queryString, params);
 
       return result.rows;
     } catch (err) {
@@ -118,7 +119,7 @@ module.exports = {
     const params = [workout_exercise_id];
 
     try {
-      const result = await query(queryString, params);
+      const result = await db.query(queryString, params);
 
       return result.rows;
     } catch (err) {
@@ -132,7 +133,7 @@ module.exports = {
     const params = [set_id];
 
     try {
-      const result = await query(queryString, params);
+      const result = await db.query(queryString, params);
 
       return;
     } catch (err) {
@@ -147,8 +148,8 @@ module.exports = {
     const params = [workout_exercise_id];
 
     try {
-      const deleteSets = await query(queryString2, params);
-      const deleteWorkout = await query(queryString1, params);
+      const deleteSets = await db.query(queryString2, params);
+      const deleteWorkout = await db.query(queryString1, params);
 
       return;
     } catch (err) {
