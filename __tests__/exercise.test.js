@@ -149,7 +149,7 @@ describe('Exercise API', () => {
 
         expect(res.statusCode).toBe(200);
         expect(res.body).not.toBeUndefined();
-        expect(res.body[0]).toHaveProperty('exercise_id');
+        expect(res.body[0]).toHaveProperty('id');
         expect(res.body[0]).toHaveProperty('exercise');
         expect(res.body[0]).toHaveProperty('est_cals_burned');
       });
@@ -306,16 +306,20 @@ describe('Exercise API', () => {
       describe('a delete request is made to delete the exercise from the workout for a particular date', () => {
         const exercise_id = 5;
         const params = [exercise_id, user_id, log_date];
+        let id;
 
         beforeAll(async () => {
           //insert an exercise in a workout
 
           const queryString = `INSERT INTO public.workout_exercises(
             exercise_id, user_id, log_date)
-            VALUES ($1, $2, $3)`;
+            VALUES ($1, $2, $3)
+            RETURNING id`;
 
           try {
-            await query(queryString, params);
+            const result = await query(queryString, params);
+            id = result.rows[0].id;
+
           } catch (err) {
             throw err;
           }
@@ -336,10 +340,10 @@ describe('Exercise API', () => {
 
         it('should delete the exercise from the workout', async () => {
           const res = await request(app).delete(
-            `/exercise/workout/delete?user_id=${user_id}&exercise_id=${exercise_id}&log_date=${log_date}`
+            `/exercise/workout?id=${id}`
           );
 
-          const queryString = `SELECT exercise_id
+          const queryString = `SELECT id
           FROM public.workout_exercises
           WHERE exercise_id=$1
           AND user_id=$2

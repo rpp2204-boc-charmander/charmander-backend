@@ -9,10 +9,5 @@ module.exports = {
     '!**/config.js',
     '!**/jest.config.js',
   ],
-  coverageThreshold: {
-    global: {
-      lines: 60,
-    },
-  },
   coverageDirectory: 'coverage',
 };

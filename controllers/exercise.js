@@ -11,8 +11,9 @@ const {
   getUserWorkoutFromDB,
   insertUserExerciseSetInDB,
   getUserExerciseSetFromDB,
+  deleteExerciseSetFromDB,
+  deleteWorkoutExerciseFromDB,
   deleteCustomExerciseFromDB,
-  deleteUserWorkoutExerciseFromDB,
 } = require('../model/exercise');
 
 module.exports = {
@@ -109,6 +110,18 @@ module.exports = {
     }
   },
 
+  deleteExerciseSet: async (req, res, next) => {
+    try {
+      const { set_id } = req.query;
+
+      const result = await deleteExerciseSetFromDB(set_id);
+
+      res.status(200).send(`Successfully Deleted Set ${set_id}`)
+    } catch (err) {
+      next(err);
+    }
+  },
+
   deleteCustomExercise: async (req, res, next) => {
     try {
       const { user_id, exercise_id } = req.query;
@@ -121,15 +134,15 @@ module.exports = {
     }
   },
 
-  deleteUserWorkoutExercise: async (req, res, next) => {
+  deleteWorkoutExercise: async (req, res, next) => {
     try {
-      const { exercise_id, user_id, log_date } = req.query;
+      const { id } = req.query;
 
-      await deleteUserWorkoutExerciseFromDB(exercise_id, user_id, log_date);
+      const result = await deleteWorkoutExerciseFromDB(id);
 
-      res.sendStatus(200);
+      res.status(200).send(`Successfully Deleted Workout Exercise ${id}`)
     } catch (err) {
       next(err);
     }
-  },
+  }
 };
