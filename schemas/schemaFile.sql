@@ -14,7 +14,8 @@ CREATE TABLE
 CREATE TABLE
   muscle_groups (
     id SERIAL NOT NULL PRIMARY KEY,
-    muscle_group VARCHAR(50)
+    muscle_group VARCHAR(50),
+    photo_url VARCHAR(250)
   );
 
 CREATE TABLE

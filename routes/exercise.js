@@ -11,13 +11,17 @@ const {
   getUserWorkoutForDate,
   postExerciseSet,
   getExerciseSet,
+  deleteExerciseSet,
+  deleteWorkoutExercise,
   deleteCustomExercise,
-  deleteUserWorkoutExercise,
 } = controller.exercise;
 
 //********GET********/
 //searching for exercises
 router.get('/default/list', getDefaultExercises);
+
+//get sets for exercise
+router.get('/list/sets', getExerciseSet); //query params: workout_exercise_id
 
 //searching for custom exercises
 router.get('/custom/list', getUserExercises); //query params: user_id
@@ -29,6 +33,9 @@ router.get('/workout/list', getUserWorkoutForDate); //query params: user_id, log
 //making a new custom exercise
 router.post('/custom/create', postUserCustomExercise); //query params: user_id, custom_exercise, muscle_group_id
 
+//add a new set to an exercise
+router.post('/create/set', postExerciseSet); //query params: weight_lbs, reps, workout_exercise_id
+
 //adding an exercise to a workout
 router.post('/create', postUserWorkoutExercise); //query params: user_id, exercise_id, log_date
 
@@ -37,6 +44,9 @@ router.post('/create', postUserWorkoutExercise); //query params: user_id, exerci
 router.delete('/custom/delete', deleteCustomExercise); //query params: user_id, exercise_id
 
 //delete an exercise from a workout
-router.delete('/workout/delete', deleteUserWorkoutExercise); //query params: user_id, exercise_id, log_date
+router.delete('/workout', deleteWorkoutExercise); //query params: id
+
+//delete a set from an exercise
+router.delete('/sets', deleteExerciseSet); //query params: set_id
 
 module.exports = router;

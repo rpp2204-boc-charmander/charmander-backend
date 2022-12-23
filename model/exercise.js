@@ -62,6 +62,7 @@ module.exports = {
 
     try {
       const result = await query(queryString, params);
+
       return result.rows;
     } catch (err) {
       throw err;
@@ -85,15 +86,30 @@ module.exports = {
   },
 
   getUserWorkoutFromDB: async (user_id, log_date) => {
-    const queryString = `SELECT workout_exercises.id AS exercise_id, exercises.exercise, est_cals_burned
-    FROM public.workout_exercises
-    JOIN users on workout_exercises.user_id=users.id
-    JOIN exercises on workout_exercises.exercise_id=exercises.id
-    WHERE users.id=$1 AND log_date=$2`;
+    const queryString = `SELECT we.id,
+                                we.est_cals_burned,
+                                we.log_date,
+                                e.exercise,
+                                mg.muscle_group,
+                                COALESCE(JSON_AGG(JSON_BUILD_OBJECT(
+                                  'set_id', es.id,
+                                  'weight_lbs', es.weight_lbs,
+                                  'reps', es.reps,
+                                  'reps_actual', es.reps_actual,
+                                  'workout_id', es.workout_exercise_id
+                                )) FILTER (WHERE reps IS NOT null), '[]'::json ) AS sets
+                          FROM workout_exercises AS we
+                          LEFT JOIN exercise_set AS es ON we.id = es.workout_exercise_id
+                          JOIN exercises AS e ON e.id = we.exercise_id
+                          JOIN users AS u ON u.id = we.user_id
+                          JOIN muscle_groups AS mg ON mg.id = e.muscle_group_id
+                          WHERE u.id = $1 AND log_date=$2
+                          GROUP BY we.id, e.exercise, mg.muscle_group`;
 
     const params = [user_id, log_date];
 
     try {
+
       const result = await query(queryString, params);
 
       return result.rows;
@@ -120,8 +136,8 @@ module.exports = {
 
   getUserExerciseSetFromDB: async (workout_exercise_id) => {
     const queryString = `SELECT id AS set_id, weight_lbs, reps, reps_actual, workout_exercise_id
-    FROM public.exercise_set
-    WHERE workout_exercise_id=$1`;
+                         FROM public.exercise_set
+                         WHERE workout_exercise_id=$1`;
 
     const params = [workout_exercise_id];
 
@@ -129,6 +145,19 @@ module.exports = {
       const result = await query(queryString, params);
 
       return result.rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  deleteExerciseSetFromDB: async (set_id) => {
+    const queryString = `DELETE FROM exercise_set WHERE id = $1`
+
+    const params = [set_id];
+
+    try {
+      const result = await query(queryString, params);
+      return;
     } catch (err) {
       throw err;
     }
@@ -150,20 +179,19 @@ module.exports = {
     }
   },
 
-  deleteUserWorkoutExerciseFromDB: async (exercise_id, user_id, log_date) => {
-    const queryString = `DELETE FROM public.workout_exercises
-    WHERE exercise_id=$1
-    AND user_id=$2
-    AND log_date=$3`;
+  deleteWorkoutExerciseFromDB: async (id) => {
+    const queryString1 = `DELETE FROM workout_exercises WHERE id = $1`;
+    const queryString2 = `DELETE FROM exercise_set WHERE workout_exercise_id = $1`;
 
-    const params = [exercise_id, user_id, log_date];
+    const params = [id];
 
     try {
-      const result = await query(queryString, params);
+      const deleteSets = await query(queryString2, params);
+      const deleteWorkout = await query(queryString1, params);
 
-      return result.rows;
+      return;
     } catch (err) {
       throw err;
     }
-  },
+  }
 };
