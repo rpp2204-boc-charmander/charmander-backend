@@ -3,13 +3,10 @@ const error = require('./middleware/error');
 const routes = require('./routes/index');
 const db = require('./db');
 const { ENV } = require('./config');
-
-
 const app = express();
 const cors = require('cors');
 
 if (ENV === 'production') db.testConnection();
-
 
 app.use(express.json());
 app.use(cors());

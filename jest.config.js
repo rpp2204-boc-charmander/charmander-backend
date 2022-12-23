@@ -1,7 +1,14 @@
 module.exports = {
   testEnvironment: 'node',
   collectCoverage: true,
-  collectCoverageFrom: ['.__tests__/**'],
+  collectCoverageFrom: [
+    '**/*.js',
+    '!**/node_modules/**',
+    '!**/coverage/**',
+    '!**/appListen.js',
+    '!**/config.js',
+    '!**/jest.config.js',
+  ],
   coverageThreshold: {
     global: {
       lines: 60,
