@@ -56,18 +56,18 @@ CREATE TABLE
 
 -- INSERT default muscle groups
 INSERT INTO
-  public.muscle_groups (id, muscle_group)
+  public.muscle_groups (id, muscle_group, photo_url)
 VALUES
-  (1, 'Biceps'),
-  (2, 'Triceps'),
-  (3, 'Chest'),
-  (4, 'Shoulders'),
-  (5, 'Back'),
-  (6, 'Hamstrings'),
-  (7, 'Quads'),
-  (8, 'Glutes'),
-  (9, 'Calves'),
-  (10, 'Abs');
+  (1, 'Biceps', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858736/Muscle%20Groups/Bicep_ypvub8.jpg'),
+  (2, 'Triceps', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858733/Muscle%20Groups/Tricep_fcjqcg.jpg'),
+  (3, 'Chest', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Chest_czuxgj.jpg'),
+  (4, 'Shoulders', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Shoulders_qbnu7z.jpg'),
+  (5, 'Back', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858731/Muscle%20Groups/Back_oqtrom.jpg'),
+  (6, 'Hamstrings', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Hamstrings_nc1o6h.jpg'),
+  (7, 'Quads', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Quads_dwm1ap.jpg'),
+  (8, 'Glutes', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Glutes_o04mqs.jpg'),
+  (9, 'Calves', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Calves_yhhyxm.jpg'),
+  (10, 'Abs', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858735/Muscle%20Groups/Abs_s13jgg.jpg');
 
 -- INSERT default exercises for Biceps
 INSERT INTO
