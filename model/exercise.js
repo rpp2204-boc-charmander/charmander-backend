@@ -97,7 +97,7 @@ module.exports = {
                                   'reps', es.reps,
                                   'reps_actual', es.reps_actual,
                                   'workout_id', es.workout_exercise_id
-                                )) FILTER (WHERE reps IS NOT null), '[]'::json ) AS sets
+                                ) ORDER BY es.id ) FILTER (WHERE reps IS NOT null), '[]'::json ) AS sets
                           FROM workout_exercises AS we
                           LEFT JOIN exercise_set AS es ON we.id = es.workout_exercise_id
                           JOIN exercises AS e ON e.id = we.exercise_id
