@@ -91,6 +91,7 @@ module.exports = {
                                 we.log_date,
                                 e.exercise,
                                 mg.muscle_group,
+                                mg.photo_url,
                                 COALESCE(JSON_AGG(JSON_BUILD_OBJECT(
                                   'set_id', es.id,
                                   'weight_lbs', es.weight_lbs,
@@ -104,7 +105,7 @@ module.exports = {
                           JOIN users AS u ON u.id = we.user_id
                           JOIN muscle_groups AS mg ON mg.id = e.muscle_group_id
                           WHERE u.id = $1 AND log_date=$2
-                          GROUP BY we.id, e.exercise, mg.muscle_group`;
+                          GROUP BY we.id, mg.photo_url, e.exercise, mg.muscle_group`;
 
     const params = [user_id, log_date];
 
