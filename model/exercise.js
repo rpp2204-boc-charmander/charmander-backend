@@ -194,5 +194,17 @@ module.exports = {
     } catch (err) {
       throw err;
     }
+  },
+
+  setActualRepsForSet: async (set_id, actual_reps) => {
+    const queryString = `UPDATE exercise_set SET reps_actual = $2 WHERE id = $1`
+    const params = [set_id, actual_reps]
+
+    try {
+      const result = await query(queryString, params);
+      return result;
+    } catch (err) {
+      throw err;
+    }
   }
 };

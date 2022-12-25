@@ -14,6 +14,7 @@ const {
   deleteExerciseSet,
   deleteWorkoutExercise,
   deleteCustomExercise,
+  completeExerciseSet,
 } = controller.exercise;
 
 //********GET********/
@@ -48,5 +49,9 @@ router.delete('/workout', deleteWorkoutExercise); //query params: id
 
 //delete a set from an exercise
 router.delete('/sets', deleteExerciseSet); //query params: set_id
+
+//********PUT***********/
+//marking a set as complete
+router.put('/set', completeExerciseSet); //query params: set_id, actual_reps
 
 module.exports = router;
