@@ -89,6 +89,7 @@ module.exports = {
     const queryString = `SELECT we.id,
                                 we.est_cals_burned,
                                 we.log_date,
+                                we.is_complete,
                                 e.exercise,
                                 mg.muscle_group,
                                 mg.photo_url,
@@ -105,7 +106,8 @@ module.exports = {
                           JOIN users AS u ON u.id = we.user_id
                           JOIN muscle_groups AS mg ON mg.id = e.muscle_group_id
                           WHERE u.id = $1 AND log_date=$2
-                          GROUP BY we.id, mg.photo_url, e.exercise, mg.muscle_group`;
+                          GROUP BY we.id, mg.photo_url, e.exercise, mg.muscle_group
+                          ORDER BY we.is_complete`;
 
     const params = [user_id, log_date];
 
@@ -199,6 +201,18 @@ module.exports = {
   setActualRepsForSet: async (set_id, actual_reps) => {
     const queryString = `UPDATE exercise_set SET reps_actual = $2 WHERE id = $1`
     const params = [set_id, actual_reps]
+
+    try {
+      const result = await query(queryString, params);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  setWorkoutExerciseAsComplete: async (workout_exercise_id) => {
+    const queryString = `UPDATE workout_exercises SET is_complete = true WHERE id = $1`
+    const params = [workout_exercise_id]
 
     try {
       const result = await query(queryString, params);

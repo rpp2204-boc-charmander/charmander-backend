@@ -15,6 +15,7 @@ const {
   deleteWorkoutExerciseFromDB,
   deleteCustomExerciseFromDB,
   setActualRepsForSet,
+  setWorkoutExerciseAsComplete,
 } = require('../model/exercise');
 
 module.exports = {
@@ -154,6 +155,18 @@ module.exports = {
       const result = await setActualRepsForSet(set_id, actual_reps);
 
       res.status(200).send(`Successfully Updated Set ${set_id} with actual reps of ${actual_reps}`)
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  completeWorkoutExercise: async (req, res, next) => {
+    try {
+      const { workout_exercise_id } = req.query;
+
+      const result = await setWorkoutExerciseAsComplete(workout_exercise_id);
+
+      res.status(200).send(`Successfully Marked Workout Exercise ${workout_exercise_id} as Complete`)
     } catch (err) {
       next(err);
     }
