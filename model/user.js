@@ -1,15 +1,31 @@
 const { query } = require('../db/index');
 
 module.exports = {
-  postFutureDatesInDB: async () => {
-    const queryString = `
-    INSERT INTO public.dates(log_date)
-    SELECT date
-    FROM GENERATE_SERIES(CURRENT_DATE, CURRENT_DATE + interval '84 days', '1 day'::interval) date
-    WHERE NOT EXISTS (SELECT log_date FROM dates WHERE log_date=date)`;
-
+  insertNewUserInDB: async (
+    auth_id,
+    firstname,
+    lastname,
+    email,
+    user_password,
+    weight_lbs,
+    height_inches,
+    sex
+  ) => {
+    const queryString = `INSERT INTO public.users(
+      auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
+    const params = [
+      auth_id,
+      firstname,
+      lastname,
+      email,
+      user_password,
+      weight_lbs,
+      height_inches,
+      sex,
+    ];
     try {
-      const result = await query(queryString);
+      const result = await query(queryString, params);
 
       return result.rows;
     } catch (err) {
@@ -17,13 +33,17 @@ module.exports = {
     }
   },
 
-  getAllDates: async () => {
-    const queryString = `SELECT id, log_date FROM public.dates ORDER BY log_date ASC`;
+  selectUserFromDB: async (auth_id) => {
+    const queryString = `SELECT id AS user_id, auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex
+    FROM public.users
+    WHERE auth_id=$1`;
+
+    const params = [auth_id];
 
     try {
-      const result = await query(queryString);
+      const result = await query(queryString, params);
 
-      return result.rows;
+      return result.rows[0];
     } catch (err) {
       throw err;
     }

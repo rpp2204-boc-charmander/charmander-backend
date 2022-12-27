@@ -3,9 +3,12 @@ const router = express.Router();
 const controller = require('../controllers');
 
 //add your controllers to this object
-const { getAllDates } = controller.user;
+const { postNewUser, getUser } = controller.user;
 
-//add more sub routes here. See app.js for main route
-router.get('/dates', getAllDates);
+//********GET********/
+router.get('/:auth_id', getUser);
+
+//********POST********/
+router.post('/create', postNewUser); //data in request body
 
 module.exports = router;

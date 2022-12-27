@@ -1,10 +1,11 @@
 CREATE TABLE
   users (
     id SERIAL NOT NULL PRIMARY KEY,
+    auth_id VARCHAR(200) DEFAULT null,
     firstname VARCHAR(50),
     lastname VARCHAR(50),
-    username VARCHAR(20),
-    password VARCHAR(20),
+    email VARCHAR(20),
+    user_password VARCHAR(20),
     weight_lbs integer,
     height_inches integer,
     sex VARCHAR(50)
@@ -13,7 +14,8 @@ CREATE TABLE
 CREATE TABLE
   muscle_groups (
     id SERIAL NOT NULL PRIMARY KEY,
-    muscle_group VARCHAR(50)
+    muscle_group VARCHAR(50),
+    photo_url VARCHAR(250)
   );
 
 CREATE TABLE
@@ -21,13 +23,7 @@ CREATE TABLE
     id SERIAL NOT NULL PRIMARY KEY,
     exercise VARCHAR(50),
     muscle_group_id integer REFERENCES muscle_groups (id),
-    user_id integer REFERENCES users (id)
-  );
-
-CREATE TABLE
-  dates (
-    id SERIAL NOT NULL PRIMARY KEY,
-    log_date DATE NOT NULL DEFAULT CURRENT_DATE
+    user_id integer REFERENCES users (id) ON DELETE CASCADE DEFAULT null
   );
 
 CREATE TABLE
@@ -35,9 +31,9 @@ CREATE TABLE
     id SERIAL NOT NULL PRIMARY KEY,
     est_cals_burned integer DEFAULT 0,
     log_date DATE NOT NULL,
-    exercise_id integer REFERENCES exercises (id),
     is_complete boolean DEFAULT false,
-    user_id integer REFERENCES users (id)
+    exercise_id integer REFERENCES exercises (id) ON DELETE CASCADE,
+    user_id integer REFERENCES users (id) ON DELETE CASCADE
   );
 
 CREATE TABLE
@@ -46,7 +42,7 @@ CREATE TABLE
     weight_lbs integer,
     reps integer,
     reps_actual integer DEFAULT 0,
-    workout_exercise_id integer REFERENCES workout_exercises (id)
+    workout_exercise_id integer REFERENCES workout_exercises (id) ON DELETE CASCADE
   );
 
 CREATE TABLE
@@ -55,7 +51,7 @@ CREATE TABLE
     total_cals_burned integer,
     total_cals_gained integer,
     log_date DATE NOT NULL,
-    user_id integer REFERENCES users (id)
+    user_id integer REFERENCES users (id) ON DELETE CASCADE
   );
 
 CREATE TABLE
@@ -132,209 +128,168 @@ VALUES
     'male'
   );
 
+CREATE TABLE
+  nutrition_log (
+    id SERIAL NOT NULL PRIMARY KEY,
+    user_id integer REFERENCES users (id),
+    log_date DATE NOT NULL,
+    food integer REFERENCES foods (id),
+    portion real,
+    consumed boolean DEFAULT false
+  )
+
+
+
 -- INSERT default muscle groups
 INSERT INTO
-  public.muscle_groups (id, muscle_group)
+  public.muscle_groups (id, muscle_group, photo_url)
 VALUES
-  (1, 'Biceps'),
-  (2, 'Triceps'),
-  (3, 'Chest'),
-  (4, 'Shoulders'),
-  (5, 'Back'),
-  (6, 'Hamstrings'),
-  (7, 'Quads'),
-  (8, 'Glutes'),
-  (9, 'Calves'),
-  (10, 'Abs');
+  (1, 'Biceps', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858736/Muscle%20Groups/Bicep_ypvub8.jpg'),
+  (2, 'Triceps', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858733/Muscle%20Groups/Tricep_fcjqcg.jpg'),
+  (3, 'Chest', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Chest_czuxgj.jpg'),
+  (4, 'Shoulders', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Shoulders_qbnu7z.jpg'),
+  (5, 'Back', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858731/Muscle%20Groups/Back_oqtrom.jpg'),
+  (6, 'Hamstrings', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Hamstrings_nc1o6h.jpg'),
+  (7, 'Quads', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Quads_dwm1ap.jpg'),
+  (8, 'Glutes', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Glutes_o04mqs.jpg'),
+  (9, 'Calves', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858221/Muscle%20Groups/Calves_yhhyxm.jpg'),
+  (10, 'Abs', 'https://res.cloudinary.com/drtz4q3am/image/upload/v1671858735/Muscle%20Groups/Abs_s13jgg.jpg');
 
 -- INSERT default exercises for Biceps
 INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
+  public.exercises (exercise, muscle_group_id)
 VALUES
-  (DEFAULT, 'DB Curls', 1, null),
-  (DEFAULT, 'Hammer Curls', 1, null),
-  (DEFAULT, 'Cable Curls', 1, null),
-  (DEFAULT, 'Concentration Curls', 1, null),
-  (DEFAULT, 'Preacher Curls', 1, null),
-  (DEFAULT, 'DB Alternating Curls', 1, null),
-  (DEFAULT, 'EZ Bar Curls', 1, null),
-  (DEFAULT, 'Barbell Curls', 1, null);
+  ('DB Curls', 1),
+  ('Hammer Curls', 1),
+  ('Cable Curls', 1),
+  ('Concentration Curls', 1),
+  ('Preacher Curls', 1),
+  ('DB Alternating Curls', 1),
+  ('EZ Bar Curls', 1),
+  ('Barbell Curls', 1);
 
 -- INSERT default exercises for Triceps
 INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
+  public.exercises (exercise, muscle_group_id)
 VALUES
-  (DEFAULT, 'Skullcrusher', 2, null),
-  (DEFAULT, 'DB Pull Overs', 2, null),
-  (DEFAULT, 'Tricep Pushdown', 2, null),
-  (DEFAULT, 'Dips', 2, null),
-  (DEFAULT, 'Preacher Curls', 2, null),
-  (DEFAULT, 'Tricep Kick Back', 2, null),
-  (DEFAULT, 'Closegrip Bench', 2, null);
+  ('Skullcrusher', 2),
+  ('DB Pull Overs', 2),
+  ('Tricep Pushdown', 2),
+  ('Dips', 2),
+  ('Preacher Curls', 2),
+  ('Tricep Kick Back', 2),
+  ('Closegrip Bench', 2);
 
 -- INSERT default exercises for Chest
 INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
+  public.exercises (exercise, muscle_group_id)
 VALUES
-  (DEFAULT, 'DB Decline Press', 3, null),
-  (DEFAULT, 'Machine Incline Press', 3, null),
-  (DEFAULT, 'Cable Cross Overs', 3, null),
-  (DEFAULT, 'Barbell Bench Press', 3, null),
-  (DEFAULT, 'Machine Chest Press', 3, null),
-  (DEFAULT, 'DB Bench', 3, null),
-  (DEFAULT, 'Incline Bench', 3, null),
-  (DEFAULT, 'Decline Bench', 3, null),
-  (DEFAULT, 'Cambered Bar Bench', 3, null),
-  (DEFAULT, 'Machine Incline Bench', 3, null);
+('DB Decline Press', 3),
+('Machine Incline Press', 3),
+('Cable Cross Overs', 3),
+('Barbell Bench Press', 3),
+('Machine Chest Press', 3),
+('DB Bench', 3),
+('Incline Bench', 3),
+('Decline Bench', 3),
+('Cambered Bar Bench', 3),
+('Machine Incline Bench', 3);
 
 -- INSERT default exercises for Shoulders
 INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
+  public.exercises (exercise, muscle_group_id)
 VALUES
-  (DEFAULT, 'Shrugs', 4, null),
-  (DEFAULT, 'Upright Rows', 4, null),
-  (DEFAULT, 'DB Lateral Raise', 4, null),
-  (DEFAULT, 'DB Front Raises', 4, null),
-  (DEFAULT, 'DB Arnold Press', 4, null),
-  (DEFAULT, 'Machine Military Press', 4, null),
-  (DEFAULT, 'Push Press', 4, null),
-  (DEFAULT, 'Face Pulls', 4, null),
-  (DEFAULT, 'Cable Upright Rows', 4, null),
-  (DEFAULT, 'DB Cuban Press', 4, null);
+('Shrugs', 4),
+('Upright Rows', 4),
+('DB Lateral Raise', 4),
+('DB Front Raises', 4),
+('DB Arnold Press', 4),
+('Machine Military Press', 4),
+('Push Press', 4),
+('Face Pulls', 4),
+('Cable Upright Rows', 4),
+('DB Cuban Press', 4);
 
 -- INSERT default exercises for Back
 INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
+  public.exercises (exercise, muscle_group_id)
 VALUES
-  (DEFAULT, 'Chest Supported Rows', 5, null),
-  (DEFAULT, 'Inverted Rows', 5, null),
-  (DEFAULT, 'DB Rows', 5, null),
-  (DEFAULT, 'T-Bar Rows', 5, null),
-  (DEFAULT, 'Lat Pulldowns', 5, null),
-  (DEFAULT, 'Seated Rows', 5, null),
-  (DEFAULT, 'Seal Rows', 5, null),
-  (DEFAULT, 'Bent-over Rows', 5, null),
-  (DEFAULT, 'Rack Pulls', 5, null),
-  (DEFAULT, 'Pendlay Rows', 5, null);
+('Chest Supported Rows', 5),
+('Inverted Rows', 5),
+('DB Rows', 5),
+('T-Bar Rows', 5),
+('Lat Pulldowns', 5),
+('Seated Rows', 5),
+('Seal Rows', 5),
+('Bent-over Rows', 5),
+('Rack Pulls', 5),
+('Pendlay Rows', 5);
 
 -- INSERT default exercises for Hamstrings
 INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
+  public.exercises (exercise, muscle_group_id)
 VALUES
-  (DEFAULT, 'DB RDLs', 6, null),
-  (DEFAULT, 'Seated Leg Curl', 6, null),
-  (DEFAULT, 'Hamstring Curls', 6, null),
-  (DEFAULT, 'Romanian Dealift', 6, null),
-  (DEFAULT, 'Good Mornings', 6, null),
-  (DEFAULT, 'Standing Leg Curl', 6, null),
-  (DEFAULT, 'Stiff Leg Deadlift', 6, null),
-  (DEFAULT, 'Single Leg Hip Thrust', 6, null),
-  (DEFAULT, 'Landmine Single Leg RDL', 6, null),
-  (DEFAULT, 'Reverse Hyperextension', 6, null);
+('DB RDLs', 6),
+('Seated Leg Curl', 6),
+('Hamstring Curls', 6),
+('Romanian Dealift', 6),
+('Good Mornings', 6),
+('Standing Leg Curl', 6),
+('Stiff Leg Deadlift', 6),
+('Single Leg Hip Thrust', 6),
+('Landmine Single Leg RDL', 6),
+('Reverse Hyperextension', 6);
 
 -- INSERT default exercises for Quads
 INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
+  public.exercises (exercise, muscle_group_id)
 VALUES
-  (DEFAULT, 'Leg Extensions', 7, null),
-  (DEFAULT, 'Split Squat (Quad Emphasis)', 7, null),
-  (DEFAULT, 'Lunges', 7, null),
-  (DEFAULT, 'Reverse Hack Squat', 7, null),
-  (DEFAULT, 'Leg Press', 7, null),
-  (DEFAULT, 'Belt Squats', 7, null),
-  (DEFAULT, 'Goblet Squats', 7, null),
-  (DEFAULT, 'Front Squats', 7, null),
-  (DEFAULT, 'Barbell Squats', 7, null),
-  (DEFAULT, 'Safety Bar Squats', 7, null);
+('Leg Extensions', 7),
+('Split Squat (Quad Emphasis)', 7),
+('Lunges', 7),
+('Reverse Hack Squat', 7),
+('Leg Press', 7),
+('Belt Squats', 7),
+('Goblet Squats', 7),
+('Front Squats', 7),
+('Barbell Squats', 7),
+('Safety Bar Squats', 7);
 
 -- INSERT default exercises for Glutes
 INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
+  public.exercises (exercise, muscle_group_id)
 VALUES
-  (DEFAULT, 'Barbell Glute Bridge', 8, null),
-  (DEFAULT, 'Split Squat (Glutes Emphasis)', 8, null),
-  (DEFAULT, 'Reverse Hyper', 8, null),
-  (DEFAULT, 'Glute Kickbacks', 8, null),
-  (DEFAULT, 'Smith Machine Hip Thrusts', 8, null),
-  (DEFAULT, 'Smith Machine Reverse Lunge', 8, null),
-  (DEFAULT, 'Lateral Lunge', 8, null);
+('Barbell Glute Bridge', 8),
+('Split Squat (Glutes Emphasis)', 8),
+('Reverse Hyper', 8),
+('Glute Kickbacks', 8),
+('Smith Machine Hip Thrusts', 8),
+('Smith Machine Reverse Lunge', 8),
+('Lateral Lunge', 8);
 
 -- INSERT default exercises for Calves
 INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
+  public.exercises (exercise, muscle_group_id)
 VALUES
-  (DEFAULT, 'Single Leg Calf Raise', 9, null),
-  (DEFAULT, 'Bent Knee Calf Raises', 9, null),
-  (DEFAULT, 'Calf Raises', 9, null),
-  (DEFAULT, 'Barbell Seated Calf Raise', 9, null),
-  (DEFAULT, 'Smith Machine Calf Raise', 9, null),
-  (DEFAULT, 'Seated Calf Raise', 9, null);
+('Single Leg Calf Raise', 9),
+('Bent Knee Calf Raises', 9),
+('Calf Raises', 9),
+('Barbell Seated Calf Raise', 9),
+('Smith Machine Calf Raise', 9),
+('Seated Calf Raise', 9);
 
--- INSERT custom exercises for Abs
+-- INSERT default exercises for Abs
 INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
+  public.exercises (exercise, muscle_group_id)
 VALUES
-  (DEFAULT, 'Barbell Russian Twists', 10, null),
-  (DEFAULT, 'Cable Crunch', 10, null),
-  (DEFAULT, 'Hanging Leg Raises', 10, null),
-  (DEFAULT, 'Weighted Situps', 10, null),
-  (DEFAULT, 'Front Plank', 10, null);
+  ( 'Barbell Russian Twists', 10),
+  ( 'Cable Crunch', 10),
+  ( 'Hanging Leg Raises', 10),
+  ( 'Weighted Situps', 10),
+  ( 'Front Plank', 10);
 
--- INSERT custom exercises for daMountain
-INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
-VALUES
-  (DEFAULT, 'Farmers walk', 5, 4),
-  (DEFAULT, 'Car Deadlift', 6, 4),
-  (DEFAULT, 'Sled Pull', 5, 4),
-  (DEFAULT, 'Monster Dumbbell Press', 4, 4);
 
--- INSERT custom exercises for Britney
-INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
-VALUES
-  (DEFAULT, 'Stone Throws', 4, 3),
-  (DEFAULT, 'Upside down lats pulls', 5, 3),
-  (DEFAULT, 'one legged bench press', 3, 3),
-  (DEFAULT, 'Vader raises', 4, 3);
 
--- INSERT custom exercises for Tom
-INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
-VALUES
-  (DEFAULT, 'Belly Flops', 10, 2),
-  (DEFAULT, 'Helicopter Jump', 7, 2),
-  (DEFAULT, 'Drone Swings', 10, 2);
-
--- INSERT custom exercises for Ash
-INSERT INTO
-  public.exercises (id, exercise, muscle_group_id, user_id)
-VALUES
-  (DEFAULT, 'Pokeball Throws', 4, 1);
-
--- INSERT workout exercises for daMountain for two separate days
-
-INSERT INTO public.workout_exercises(
-	log_date, exercise_id, user_id)
-	VALUES ('2022-12-13',
-			(SELECT id FROM exercises WHERE exercise='DB Alternating Curls'),
-			(SELECT id FROM users WHERE username='daMountain')),('2022-12-13',
-			(SELECT id FROM exercises WHERE exercise='Barbell Russian Twists'),
-			(SELECT id FROM users WHERE username='daMountain')),('2022-12-13',
-			(SELECT id FROM exercises WHERE exercise='Smith Machine Reverse Lunge'),
-			(SELECT id FROM users WHERE username='daMountain')),('2022-12-14',
-			(SELECT id FROM exercises WHERE exercise='Glute Kickbacks'),
-			(SELECT id FROM users WHERE username='daMountain')),('2022-12-14',
-			(SELECT id FROM exercises WHERE exercise='Barbell Squats'),
-			(SELECT id FROM users WHERE username='daMountain')),('2022-12-14',
-			(SELECT id FROM exercises WHERE exercise='Barbell Squats'),
-			(SELECT id FROM users WHERE username='daMountain'));
-
--- INSERT sets for daMountain for workout_id=1
-
-INSERT INTO public.exercise_set(
-	weight_lbs, reps, workout_exercise_id)
-	VALUES (50, 10, 1), (50, 10, 1),(80, 20, 1), (90, 10, 1);
 
 
 -- NUTRITION --
