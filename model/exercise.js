@@ -1,13 +1,16 @@
-const db = require('../db');
+const { query } = require('../db');
 
 module.exports = {
+  //////////////////////////
+  //searching for exercises
+  //////////////////////////
   getDefaultExercisesFromDB: async () => {
     const queryString = `SELECT exercises.id AS exercise_id, exercise, muscle_group_id, muscle_group FROM exercises
     JOIN muscle_groups ON exercises.muscle_group_id=muscle_groups.id
     WHERE user_id IS NULL`;
 
     try {
-      const result = await db.query(queryString);
+      const result = await query(queryString);
 
       return result.rows;
     } catch (err) {
@@ -19,7 +22,7 @@ module.exports = {
     const queryString = `SELECT muscle_groups.id AS muscle_group_id, muscle_group FROM muscle_groups`;
 
     try {
-      const result = await db.query(queryString);
+      const result = await query(queryString);
 
       return result.rows;
     } catch (err) {
@@ -27,12 +30,35 @@ module.exports = {
     }
   },
 
-  getUserExercisesFromDB: async (username) => {
+  //////////////////////////
+  //creating custom exercises
+  //////////////////////////
+
+  insertUserCustomExerciseInDB: async (
+    user_id,
+    custom_exercise,
+    muscle_group_id
+  ) => {
+    const queryString = `INSERT INTO exercises(
+      exercise, muscle_group_id, user_id)
+      VALUES ($1,$2, $3)`;
+
+    const params = [custom_exercise, muscle_group_id, user_id];
+
+    try {
+      const result = await query(queryString, params);
+      return result.rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  getUserExercisesFromDB: async (user_id) => {
     const queryString = `SELECT exercises.id AS exercise_id, exercise, muscle_group_id, muscle_group FROM exercises
     JOIN muscle_groups ON exercises.muscle_group_id=muscle_groups.id
-    WHERE user_id=(SELECT id FROM users WHERE username=$1)`;
+    WHERE user_id=$1`;
 
-    const params = [username];
+    const params = [user_id];
 
     try {
       const result = await query(queryString, params);
@@ -43,14 +69,12 @@ module.exports = {
     }
   },
 
-  insertUserWorkoutExerciseInDB: async (log_date, exercise, username) => {
+  insertUserWorkoutExerciseInDB: async (log_date, exercise_id, user_id) => {
     const queryString = `INSERT INTO public.workout_exercises(
       log_date, exercise_id, user_id)
-      VALUES ($1,
-          (SELECT id FROM exercises WHERE exercise=$2),
-          (SELECT id FROM users WHERE username=$3))`;
+      VALUES ($1, $2, $3)`;
 
-    const params = [log_date, exercise, username];
+    const params = [log_date, exercise_id, user_id];
 
     try {
       const result = await query(queryString, params);
@@ -61,16 +85,32 @@ module.exports = {
     }
   },
 
-  getUserWorkoutFromDB: async (username, log_date) => {
-    const queryString = `SELECT workout_exercises.id, users.username, exercises.exercise, log_date, est_cals_burned
-    FROM public.workout_exercises
-    JOIN users on workout_exercises.user_id=users.id
-    JOIN exercises on workout_exercises.exercise_id=exercises.id
-    WHERE username=$1 AND log_date=$2`;
+  getUserWorkoutFromDB: async (user_id, log_date) => {
+    const queryString = `SELECT we.id,
+                                we.est_cals_burned,
+                                we.log_date,
+                                e.exercise,
+                                mg.muscle_group,
+                                mg.photo_url,
+                                COALESCE(JSON_AGG(JSON_BUILD_OBJECT(
+                                  'set_id', es.id,
+                                  'weight_lbs', es.weight_lbs,
+                                  'reps', es.reps,
+                                  'reps_actual', es.reps_actual,
+                                  'workout_id', es.workout_exercise_id
+                                ) ORDER BY es.id ) FILTER (WHERE reps IS NOT null), '[]'::json ) AS sets
+                          FROM workout_exercises AS we
+                          LEFT JOIN exercise_set AS es ON we.id = es.workout_exercise_id
+                          JOIN exercises AS e ON e.id = we.exercise_id
+                          JOIN users AS u ON u.id = we.user_id
+                          JOIN muscle_groups AS mg ON mg.id = e.muscle_group_id
+                          WHERE u.id = $1 AND log_date=$2
+                          GROUP BY we.id, mg.photo_url, e.exercise, mg.muscle_group`;
 
-    const params = [username, log_date];
+    const params = [user_id, log_date];
 
     try {
+
       const result = await query(queryString, params);
 
       return result.rows;
@@ -97,8 +137,8 @@ module.exports = {
 
   getUserExerciseSetFromDB: async (workout_exercise_id) => {
     const queryString = `SELECT id AS set_id, weight_lbs, reps, reps_actual, workout_exercise_id
-    FROM public.exercise_set
-    WHERE workout_exercise_id=$1`;
+                         FROM public.exercise_set
+                         WHERE workout_exercise_id=$1`;
 
     const params = [workout_exercise_id];
 
@@ -110,4 +150,49 @@ module.exports = {
       throw err;
     }
   },
+
+  deleteExerciseSetFromDB: async (set_id) => {
+    const queryString = `DELETE FROM exercise_set WHERE id = $1`
+
+    const params = [set_id];
+
+    try {
+      const result = await query(queryString, params);
+      return;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  deleteCustomExerciseFromDB: async (user_id, exercise_id) => {
+    const queryString = `DELETE FROM public.exercises
+    WHERE user_id=$1
+    AND exercises.id=$2`;
+
+    const params = [user_id, exercise_id];
+
+    try {
+      const result = await query(queryString, params);
+
+      return result.rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  deleteWorkoutExerciseFromDB: async (id) => {
+    const queryString1 = `DELETE FROM workout_exercises WHERE id = $1`;
+    const queryString2 = `DELETE FROM exercise_set WHERE workout_exercise_id = $1`;
+
+    const params = [id];
+
+    try {
+      const deleteSets = await query(queryString2, params);
+      const deleteWorkout = await query(queryString1, params);
+
+      return;
+    } catch (err) {
+      throw err;
+    }
+  }
 };
