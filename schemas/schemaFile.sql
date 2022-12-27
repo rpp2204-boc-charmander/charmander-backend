@@ -54,6 +54,25 @@ CREATE TABLE
     user_id integer REFERENCES users (id) ON DELETE CASCADE
   );
 
+  CREATE TABLE
+  foods (
+    id SERIAL NOT NULL PRIMARY KEY,
+    name VARCHAR(255),
+    foodId VARCHAR(255),
+    nutrients VARCHAR(500),
+    image VARCHAR(255)
+  )
+
+CREATE TABLE
+  nutrition_log (
+    id SERIAL NOT NULL PRIMARY KEY,
+    user_id integer REFERENCES users (id),
+    log_date DATE NOT NULL,
+    food integer REFERENCES foods (id),
+    consumed boolean DEFAULT false
+  )
+
+
 -- INSERT default muscle groups
 INSERT INTO
   public.muscle_groups (id, muscle_group, photo_url)
