@@ -3,6 +3,20 @@ const db = require('../db');
 module.exports = {
   addUserFoods: async() => {
     // add foods insert will go here
+
+    const queryString = `INSERT INTO public.nutrition_log(
+      weight_lbs, reps, workout_exercise_id)
+      VALUES ($1, $2, $3)`;
+
+    const params = [weight_lbs, reps, workout_exercise_id];
+
+    try {
+      const result = await query(queryString, params);
+
+      return result.rows;
+    } catch (err) {
+      throw err;
+    }
   },
   getUserFoods: async() => {
     // get foods for the day query will go here

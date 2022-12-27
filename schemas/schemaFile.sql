@@ -61,11 +61,12 @@ CREATE TABLE
 CREATE TABLE
   foods (
     id SERIAL NOT NULL PRIMARY KEY,
-    name VARCHAR(255),
-    foodId VARCHAR(255),
+    food_name VARCHAR(255),
+    food_id VARCHAR(255),
+    measurements VARCHAR(2000),
     nutrients VARCHAR(500),
-    image VARCHAR(255)
-  )
+    food_image VARCHAR(255)
+  );
 
 CREATE TABLE
   nutrition_log (
@@ -73,8 +74,9 @@ CREATE TABLE
     user_id integer REFERENCES users (id),
     log_date DATE NOT NULL,
     food integer REFERENCES foods (id),
+    portion real,
     consumed boolean DEFAULT false
-  )
+  );
 
 -- INSERT default users
 INSERT INTO
@@ -333,3 +335,145 @@ INSERT INTO public.workout_exercises(
 INSERT INTO public.exercise_set(
 	weight_lbs, reps, workout_exercise_id)
 	VALUES (50, 10, 1), (50, 10, 1),(80, 20, 1), (90, 10, 1);
+
+
+-- NUTRITION --
+
+INSERT INTO
+  public.foods (food_name, food_id, nutrients, measurements, food_image)
+VALUES
+  ('Bacon Clubhouse Burger 9.7 oz (274 g)', 'food_bmyxrshbfao9s1amjrvhoauob6mo', '{
+      "CAL": "740",
+      "FAT": "41",
+      "SFAT": "16",
+      "TFAT": "1.5",
+      "CHOL": "125",
+      "SALT": "1480",
+      "CARB": "51",
+      "FBR": "4",
+      "SGR": "14",
+      "PRO": "40",
+      "ITEM": "Bacon Clubhouse Burger 9.7 oz (274 g)",
+      "CATEGORY": "BURGERSANDWICH"
+  }', '[
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_unit",
+                    "label": "Whole",
+                    "weight": 131.0
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_sandwich",
+                    "label": "Sandwich",
+                    "weight": 131.0
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_gram",
+                    "label": "Gram",
+                    "weight": 1.0
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_ounce",
+                    "label": "Ounce",
+                    "weight": 28.349523125
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_pound",
+                    "label": "Pound",
+                    "weight": 453.59237
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram",
+                    "label": "Kilogram",
+                    "weight": 1000.0
+                }
+            ]', 'imagegoes here'),
+  ('Premium Grilled Chicken Bacon Clubhouse Sandwich 10 oz (285 g)', 'food_aqnly5xaq6rsv2bv0oi81bugldyr', '{
+      "CAL": "640",
+      "FAT": "41",
+      "SFAT": "16",
+      "TFAT": "1.5",
+      "CHOL": "125",
+      "SALT": "1480",
+      "CARB": "51",
+      "FBR": "4",
+      "SGR": "14",
+      "PRO": "40",
+      "ITEM": "Premium Grilled Chicken Bacon Clubhouse Sandwich 10 oz (285 g)",
+      "CATEGORY": "BURGERSANDWICH"
+  }', '[
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_unit",
+                    "label": "Whole",
+                    "weight": 131.0
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_sandwich",
+                    "label": "Sandwich",
+                    "weight": 131.0
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_gram",
+                    "label": "Gram",
+                    "weight": 1.0
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_ounce",
+                    "label": "Ounce",
+                    "weight": 28.349523125
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_pound",
+                    "label": "Pound",
+                    "weight": 453.59237
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram",
+                    "label": "Kilogram",
+                    "weight": 1000.0
+                }
+            ]', 'image goes here'),
+  ('Premium Buttermilk Crispy Chicken Bacon Clubhouse Sandwich 10.1 oz (287 g)', 'food_a3ssteza84mhb2alnunwga2n6yt8', '{
+      "CAL": "700",
+      "FAT": "41",
+      "SFAT": "16",
+      "TFAT": "1.5",
+      "CHOL": "125",
+      "SALT": "1480",
+      "CARB": "51",
+      "FBR": "4",
+      "SGR": "14",
+      "PRO": "40",
+      "ITEM": "Premium Buttermilk Crispy Chicken Bacon Clubhouse Sandwich 10.1 oz (287 g)",
+      "CATEGORY": "BURGERSANDWICH"
+  }', '[
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_unit",
+                    "label": "Whole",
+                    "weight": 131.0
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_sandwich",
+                    "label": "Sandwich",
+                    "weight": 131.0
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_gram",
+                    "label": "Gram",
+                    "weight": 1.0
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_ounce",
+                    "label": "Ounce",
+                    "weight": 28.349523125
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_pound",
+                    "label": "Pound",
+                    "weight": 453.59237
+                },
+                {
+                    "uri": "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram",
+                    "label": "Kilogram",
+                    "weight": 1000.0
+                }
+            ]', 'image goes here');
