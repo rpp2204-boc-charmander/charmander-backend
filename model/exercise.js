@@ -220,5 +220,19 @@ module.exports = {
     } catch (err) {
       throw err;
     }
+  },
+
+  editSetsForExerciseFromDB: async (reps, weights, setIDs) => {
+      for (var i = 0; i < reps.length; i++) {
+        console.log('iterating...', i)
+        try {
+          const queryString = `UPDATE exercise_set SET reps = $1, weight_lbs = $2 WHERE id = $3`
+          const params = [reps[i], weights[i], setIDs[i]]
+
+          await query(queryString, params);
+        } catch (error) {
+          return error;
+        }
+      }
   }
 };

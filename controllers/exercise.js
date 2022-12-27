@@ -16,6 +16,7 @@ const {
   deleteCustomExerciseFromDB,
   setActualRepsForSet,
   setWorkoutExerciseAsComplete,
+  editSetsForExerciseFromDB
 } = require('../model/exercise');
 
 module.exports = {
@@ -167,6 +168,18 @@ module.exports = {
       const result = await setWorkoutExerciseAsComplete(workout_exercise_id);
 
       res.status(200).send(`Successfully Marked Workout Exercise ${workout_exercise_id} as Complete`)
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  editSetsForExercise: async (req, res, next) => {
+    try {
+      const { reps, weights, setIDs } = req.body;
+
+      await editSetsForExerciseFromDB(reps, weights, setIDs);
+
+      res.status(200).send(`Successfully Edited Sets`)
     } catch (err) {
       next(err);
     }
