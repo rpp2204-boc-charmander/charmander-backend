@@ -86,7 +86,7 @@ module.exports = {
   },
 
   getUserWorkoutFromDB: async (user_id, log_date) => {
-    const queryString = `SELECT we.id,
+    const workoutQuery = `SELECT we.id,
                                 we.est_cals_burned,
                                 we.log_date,
                                 we.is_complete,
@@ -109,13 +109,26 @@ module.exports = {
                           GROUP BY we.id, mg.photo_url, e.exercise, mg.muscle_group
                           ORDER BY we.is_complete`;
 
+    const caloriesQuery = `SELECT total_cals_burned FROM daily_calories WHERE user_id = $1 AND log_date = $2`
+
     const params = [user_id, log_date];
 
+    const data = {}
+
     try {
+      const calories = await query(caloriesQuery, params);
 
-      const result = await query(queryString, params);
+      if ( !calories.rows.length ) {
+        data.total_cals_burned = 0;
+      } else {
+        data.total_cals_burned = calories.rows[0].total_cals_burned;
+      }
 
-      return result.rows;
+      const result = await query(workoutQuery, params);
+      data.result = result.rows;
+
+      return data;
+
     } catch (err) {
       throw err;
     }
@@ -198,19 +211,34 @@ module.exports = {
     }
   },
 
-  setActualRepsForSet: async (set_id, actual_reps) => {
-    const queryString = `UPDATE exercise_set SET reps_actual = $2 WHERE id = $1`
-    const params = [set_id, actual_reps]
+  setActualRepsForSet: async (set_id, actual_reps, user_id) => {
+    const setQuery = `UPDATE exercise_set SET reps_actual = $2 WHERE id = $1`
+    const setParams = [set_id, actual_reps]
+
+    const weightQuery = `SELECT weight_lbs FROM USERS where id = $1`
+    const weightParams = [user_id]
+
+    const caloriesQuery = `UPDATE workout_exercises SET est_cals_burned = est_cals_burned::integer + $2 WHERE id = ( SELECT workout_exercise_id FROM exercise_set WHERE id = $1 )`
+    const caloriesParams = [set_id]
+
 
     try {
-      const result = await query(queryString, params);
+      const weightResult = await query(weightQuery, weightParams);
+      const weight = weightResult.rows[0].weight_lbs;
+      const calsBurned = Math.ceil(5 * weight * actual_reps * .000875);
+
+      caloriesParams.push(calsBurned)
+
+      const caloriesResult = await query(caloriesQuery, caloriesParams);
+
+      const result = await query(setQuery, setParams);
       return result;
     } catch (err) {
       throw err;
     }
   },
 
-  setWorkoutExerciseAsComplete: async (workout_exercise_id) => {
+  setWorkoutExerciseAsComplete: async (workout_exercise_id, user_id) => {
     const queryString = `UPDATE workout_exercises SET is_complete = true WHERE id = $1`
     const params = [workout_exercise_id]
 

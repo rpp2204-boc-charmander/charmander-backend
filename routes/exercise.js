@@ -54,10 +54,10 @@ router.delete('/sets', deleteExerciseSet); //query params: set_id
 
 //********PUT***********/
 //marking a set as complete
-router.put('/set', completeExerciseSet); //query params: set_id, actual_reps
+router.put('/set', completeExerciseSet); //query params: set_id, actual_reps, user_id
 
 //marking an exercise as complete
-router.put('/workout', completeWorkoutExercise) //query params: workout_exercise_id
+router.put('/workout', completeWorkoutExercise) //query params: workout_exercise_id, user_id, log_date
 
 //editing sets for a workout
 router.put('/workout/sets', editSetsForExercise) //body params: reps: array, weights: array, setIDs: array

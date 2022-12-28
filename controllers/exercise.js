@@ -151,9 +151,9 @@ module.exports = {
 
   completeExerciseSet: async (req, res, next) => {
     try {
-      const { set_id, actual_reps } = req.query;
+      const { set_id, actual_reps, user_id } = req.query;
 
-      const result = await setActualRepsForSet(set_id, actual_reps);
+      const result = await setActualRepsForSet(set_id, actual_reps, user_id);
 
       res.status(200).send(`Successfully Updated Set ${set_id} with actual reps of ${actual_reps}`)
     } catch (err) {
@@ -163,9 +163,9 @@ module.exports = {
 
   completeWorkoutExercise: async (req, res, next) => {
     try {
-      const { workout_exercise_id } = req.query;
+      const { workout_exercise_id, user_id, log_date } = req.query;
 
-      const result = await setWorkoutExerciseAsComplete(workout_exercise_id);
+      const result = await setWorkoutExerciseAsComplete(workout_exercise_id, user_id, log_date);
 
       res.status(200).send(`Successfully Marked Workout Exercise ${workout_exercise_id} as Complete`)
     } catch (err) {
