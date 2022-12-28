@@ -110,8 +110,10 @@ module.exports = {
                           ORDER BY we.is_complete`;
 
     const caloriesQuery = `SELECT total_cals_burned FROM daily_calories WHERE user_id = $1 AND log_date = $2`
-
     const params = [user_id, log_date];
+
+    //If daily calories has no data for current day, add a row
+    const insertDailyCalories = `INSERT INTO daily_calories (total_cals_burned, log_date, user_id) VALUES (0, $2, $1)`
 
     const data = {}
 
@@ -120,6 +122,9 @@ module.exports = {
 
       if ( !calories.rows.length ) {
         data.total_cals_burned = 0;
+
+        await query(insertDailyCalories, params);
+
       } else {
         data.total_cals_burned = calories.rows[0].total_cals_burned;
       }
@@ -238,13 +243,21 @@ module.exports = {
     }
   },
 
-  setWorkoutExerciseAsComplete: async (workout_exercise_id, user_id) => {
-    const queryString = `UPDATE workout_exercises SET is_complete = true WHERE id = $1`
-    const params = [workout_exercise_id]
+  setWorkoutExerciseAsComplete: async (workout_exercise_id, user_id, log_date) => {
+    const workoutQuery = `UPDATE workout_exercises SET is_complete = true WHERE id = $1`
+    const workoutParams = [workout_exercise_id]
+
+    const caloriesQuery = `UPDATE daily_calories
+                           SET total_cals_burned = total_cals_burned::integer + (SELECT est_cals_burned FROM workout_exercises WHERE id = $1)::integer
+                           WHERE user_id = $2 AND log_date = $3`
+
+    const caloriesParams = [workout_exercise_id, user_id, log_date]
 
     try {
-      const result = await query(queryString, params);
-      return result;
+      await query(workoutQuery, workoutParams);
+      await query(caloriesQuery, caloriesParams);
+
+      return;
     } catch (err) {
       throw err;
     }
