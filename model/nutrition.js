@@ -18,18 +18,18 @@ module.exports = {
       throw err;
     }
   },
-  addUserFoods: async (user_id, log_date, food, portion, consumed) => {
+  addUserFoods: async (user_id, log_date, food, portion, consumed, measurement) => {
     // logs food
 
     const queryString = `INSERT INTO public.nutrition_log(
-      user_id, log_date, food, portion, consumed)
-      VALUES ($1, $2, $3, $4, $5);`;
+      user_id, log_date, food, portion, consumed, measurement)
+      VALUES ($1, $2, $3, $4, $5, $6);`;
 
-    const params = [user_id, log_date, food, portion, consumed];
+    const params = [user_id, log_date, food, portion, consumed, measurement];
 
     try {
       const result = await db.query(queryString, params);
-      return result.rows;
+      return result.rowCount;
 
     } catch (err) {
       throw err;
@@ -53,13 +53,13 @@ module.exports = {
       throw err;
     }
   },
-  updateUserFoods: async (logId, consumedStatus, portion) => {
+  updateUserFoods: async (logId, consumedStatus, portion, measurement) => {
     // updates a food for user's food log
     const queryString = `UPDATE public.nutrition_log
-      SET consumed = $2, portion = $3
+      SET consumed = $2, portion = $3, measurement = $4
       WHERE id = $1;`;
 
-    const params = [logId, consumedStatus, portion];
+    const params = [logId, consumedStatus, portion, measurement];
 
     try {
       const result = await db.query(queryString, params);

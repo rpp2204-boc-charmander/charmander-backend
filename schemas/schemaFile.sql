@@ -71,6 +71,7 @@ CREATE TABLE
     log_date DATE NOT NULL,
     food integer REFERENCES foods (id),
     portion real,
+    measurement VARCHAR(100),
     consumed boolean DEFAULT false
   );
 
@@ -80,8 +81,8 @@ INSERT INTO
     id,
     firstname,
     lastname,
-    username,
-    password,
+    email,
+    user_password,
     weight_lbs,
     height_inches,
     sex
@@ -127,16 +128,6 @@ VALUES
     81,
     'male'
   );
-
-CREATE TABLE
-  nutrition_log (
-    id SERIAL NOT NULL PRIMARY KEY,
-    user_id integer REFERENCES users (id),
-    log_date DATE NOT NULL,
-    food integer REFERENCES foods (id),
-    portion real,
-    consumed boolean DEFAULT false
-  )
 
 
 

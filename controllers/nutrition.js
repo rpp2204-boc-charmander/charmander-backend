@@ -41,6 +41,7 @@ module.exports = {
     }
   },
   logFood: async (req, res, next) => {
+    console.log(req.query);
     let allFoods;
 
     if(req.query.length){
@@ -52,9 +53,9 @@ module.exports = {
     let successfulAdds = 0;
 
     await allFoods.map(async (food) => {
-      const { user, date, foodId, portion, consumed } = food;
+      const { user, date, foodId, portion, measurement, consumed } = food;
       try {
-        const addedFood = await addUserFoods(user, date, foodId, portion, consumed);
+        const addedFood = await addUserFoods(user, date, foodId, portion, consumed, measurement);
         successfulAdds++;
         if(successfulAdds === allFoods.length){
           res.send('Successful!');
@@ -71,17 +72,16 @@ module.exports = {
     const food_image = image || 'no image available';
     try {
       const newId = await addFoodsToDB(label, foodId, stringedMeasurements, stringedNutrients, food_image);
-      console.log('newId: ', newId);
-      res.send(newId);
+      res.send(newId[0]);
     } catch (err) {
       next(err);
     }
   },
   updateLog: async (req, res, next) => {
-    const { logId, consumed, portion } = req.query;
+    const { logId, consumed, portion, measurement } = req.query;
     try {
-      const updated = await updateUserFoods(logId, consumed, portion);
-
+      const updated = await updateUserFoods(logId, consumed, portion, measurement);
+      res.send('Updated Successfully');
     } catch (err) {
       next(err);
     }
