@@ -26,24 +26,49 @@ module.exports = {
     }
   },
   getFoodLog: async (req, res, next) => {
+    const { user, date } = req.query;
     try {
-      res.send('hi');
+      const returnedLog = await getUserFoodsFromDB(user, date);
+      const foodLog = [];
+      returnedLog.map((log) => {
+        let { id, food_name, nutrients, food_image, portion } = log;
+        log.nutrients = JSON.parse(nutrients);
+        foodLog.push(log);
+      });
+      res.send(foodLog);
     } catch (err) {
       next(err);
     }
   },
   logFood: async (req, res, next) => {
-    try {
-      res.send('hi');
-    } catch (err) {
-      next(err);
+    let allFoods;
+
+    if(req.query.length){
+      allFoods = req.query;
+    } else {
+      allFoods = [req.query];
     }
+
+    let successfulAdds = 0;
+
+    await allFoods.map(async (food) => {
+      const { user, date, foodId, portion, consumed } = food;
+      try {
+        const addedFood = await addUserFoods(user, date, foodId, portion, consumed);
+        successfulAdds++;
+        if(successfulAdds === allFoods.length){
+          res.send('Successful!');
+        };
+      } catch (err) {
+        next(err);
+      }
+    })
   },
   addFoodToDB: async (req, res, next) => {
-    const { label, foodId, nutrients } = req.query.food;
+    const { label, foodId, nutrients, image } = req.query.food;
     const stringedMeasurements = JSON.stringify(req.query.measures);
     const stringedNutrients = JSON.stringify(nutrients);
-    const food_image = req.query.food.food_image || 'no image available';
+    const food_image = image || 'no image available';
     try {
       const newId = await addFoodsToDB(label, foodId, stringedMeasurements, stringedNutrients, food_image);
       console.log('newId: ', newId);
@@ -53,15 +78,19 @@ module.exports = {
     }
   },
   updateLog: async (req, res, next) => {
+    const { logId, consumed, portion } = req.query;
     try {
-      res.send('hi');
+      const updated = await updateUserFoods(logId, consumed, portion);
+
     } catch (err) {
       next(err);
     }
   },
   deleteFromLog: async (req, res, next) => {
+    const { logId } = req.query;
     try {
-      res.send('hi');
+      const remove = await removeUserFoods(logId);
+      res.send('Deleted Successfully');
     } catch (err) {
       next(err);
     }
