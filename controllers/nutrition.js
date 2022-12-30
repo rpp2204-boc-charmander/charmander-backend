@@ -43,6 +43,9 @@ module.exports = {
   logFood: async (req, res, next) => {
     console.log(req.query);
     let allFoods;
+    let user = req.query.user;
+    let eaten = req.query.consumed;
+    let date = req.query.date;
 
     if(req.query.length){
       allFoods = req.query;
@@ -53,9 +56,9 @@ module.exports = {
     let successfulAdds = 0;
 
     await allFoods.map(async (food) => {
-      const { user, date, foodId, portion, measurement, consumed } = food;
+      const { foodId, portion, measurement } = food;
       try {
-        const addedFood = await addUserFoods(user, date, foodId, portion, consumed, measurement);
+        const addedFood = await addUserFoods(user, date, foodId, portion, eaten, measurement);
         successfulAdds++;
         if(successfulAdds === allFoods.length){
           res.send('Successful!');

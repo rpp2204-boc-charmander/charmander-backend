@@ -37,7 +37,7 @@ module.exports = {
   },
   getUserFoodsFromDB: async (user_id, log_date) => {
     // gets user's food log
-    const queryString = `SELECT nlog.id, nlog.portion, nlog.food, nlog.consumed, foodinfo.food_name, foodinfo.nutrients, foodinfo.food_image
+    const queryString = `SELECT nlog.id, nlog.portion, nlog.food, nlog.consumed, nlog.measurement, foodinfo.food_name, foodinfo.nutrients, foodinfo.food_image
       FROM public.nutrition_log nlog
       JOIN public.foods foodinfo
       ON nlog.food = foodinfo.id
