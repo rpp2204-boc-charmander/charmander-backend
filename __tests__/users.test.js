@@ -71,7 +71,7 @@ describe('Users API', () => {
       });
 
       it('should get user id', async () => {
-        const res = await request(app).get(`/user/${auth_id}/`);
+        const res = await request(app).get(`/user/auth/${auth_id}/`);
 
         expect(res.statusCode).toBe(200);
         expect(res.body).toMatchObject(newUserInfo);
