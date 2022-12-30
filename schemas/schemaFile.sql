@@ -49,8 +49,8 @@ CREATE TABLE
 CREATE TABLE
   daily_calories (
     id SERIAL NOT NULL PRIMARY KEY,
-    total_cals_burned integer,
-    total_cals_gained integer,
+    total_cals_burned integer DEFAULT 0,
+    total_cals_gained integer DEFAULT 0,
     log_date DATE NOT NULL,
     user_id integer REFERENCES users (id) ON DELETE CASCADE
   );

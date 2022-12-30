@@ -149,12 +149,12 @@ describe('Exercise API', () => {
 
         expect(res.statusCode).toBe(200);
         expect(res.body).not.toBeUndefined();
-        expect(res.body[0]).toHaveProperty('id');
-        expect(res.body[0]).toHaveProperty('photo_url');
-        expect(res.body[0]).toHaveProperty('sets');
-        expect(res.body[0]).toHaveProperty('muscle_group');
-        expect(res.body[0]).toHaveProperty('exercise');
-        expect(res.body[0]).toHaveProperty('est_cals_burned');
+        expect(res.body.result[0]).toHaveProperty('id');
+        expect(res.body.result[0]).toHaveProperty('photo_url');
+        expect(res.body.result[0]).toHaveProperty('sets');
+        expect(res.body.result[0]).toHaveProperty('muscle_group');
+        expect(res.body.result[0]).toHaveProperty('exercise');
+        expect(res.body.result[0]).toHaveProperty('est_cals_burned');
       });
     });
   });
