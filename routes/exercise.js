@@ -47,7 +47,7 @@ router.post('/create', postUserWorkoutExercise); //query params: user_id, exerci
 router.delete('/custom/delete', deleteCustomExercise); //query params: user_id, exercise_id
 
 //delete an exercise from a workout
-router.delete('/workout', deleteWorkoutExercise); //query params: id
+router.delete('/workout', deleteWorkoutExercise); //query params: id, user_id, log_date
 
 //delete a set from an exercise
 router.delete('/sets', deleteExerciseSet); //query params: set_id
