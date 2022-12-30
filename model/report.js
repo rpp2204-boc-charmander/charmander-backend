@@ -25,7 +25,7 @@ module.exports = {
       try {
         let {start, end} = findDates(date);
         let params = [id, start, end];
-        let queryString = 'SELECT (total_cals_gained, log_date) WHERE (user_id = $1) AND (log_date >= $2 AND log_date <= $3)';
+        let queryString = 'SELECT (total_cals_gained, log_date) FROM daily_calories WHERE (user_id = $1) AND (log_date >= "$2" AND log_date <= "$3") ORDER BY log_date';
         let result = await query(queryString, params);
         return result;
       } catch (err) {
@@ -40,7 +40,7 @@ module.exports = {
       try {
         let {start, end} = findDates(date);
         let params = [id, start, end];
-        let queryString = 'SELECT (total_cals_burned, log_date) WHERE (user_id = $1) AND (log_date >= $2 AND log_date <= $3)';
+        let queryString = 'SELECT (total_cals_burned, log_date) FROM daily_calories WHERE (user_id = $1) AND (log_date >= "$2" AND log_date <= "$3") ORDER BY log_date';
         let result = await query(queryString, params);
         return result;
       } catch (err) {
@@ -55,11 +55,7 @@ module.exports = {
       try {
         let {start, end} = findDates(date);
         let params = [id, start, end];
-        /* Select from workout_exercises that are complete based off of user_id and date
-          merge with exercises so the exercises name can be returned with it
-          then find all of the sets that go with each of those workouts based on w_e id
-        */
-        let queryString = ``;
+        let queryString = `SELECT DISTINCT w.id, w.log_date, e.exercise, s.weight_lbs FROM workout_exercises AS w INNER JOIN exercises AS e ON (w.exercise_id = e.id) INNER JOIN exercise_set AS s ON (s.workout_exercise_id = w.id) WHERE (w.user_id = $1) AND (w.log_date >= "$2" AND w.log_date <= "$3") (s.weight_lbs = (SELECT MAX(weight_lbs) FROM exercise_set WHERE workout_exercise_id = w.id)) ORDER BY w.log_date`;
         let result = await query(queryString, params);
         return result;
       } catch (err) {
