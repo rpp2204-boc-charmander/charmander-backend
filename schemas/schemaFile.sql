@@ -206,9 +206,6 @@ VALUES
 -----------------------------------------------------------
      -- INSERT STATEMENTS FOR REPORT MOCK DATA --
 -----------------------------------------------------------
--- Insert dates
--- INSERT INTO public.dates(log_date)
---   VALUES ('2022-12-20'), ('2021-4-16'), ('2022-12-13');
 
 -- -- Insert exercises for users
 -- INSERT INTO public.workout_exercises(log_date, exercise_id, is_complete, user_id)
