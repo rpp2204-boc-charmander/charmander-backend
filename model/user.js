@@ -37,7 +37,7 @@ module.exports = {
   },
 
   checkUserInDB: async (auth_id) => {
-    const queryString = `SELECT id AS user_id, auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex, profile_pic
+    const queryString = `SELECT id AS id, auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex, profile_pic
     FROM public.users
     WHERE auth_id=$1`;
 
@@ -54,7 +54,7 @@ module.exports = {
   },
 
   checkEmailInDB: async (email) => {
-    const queryString = `SELECT id AS user_id, auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex, profile_pic
+    const queryString = `SELECT id AS id, auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex, profile_pic
     FROM public.users
     WHERE email=$1`;
 
