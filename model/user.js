@@ -13,7 +13,7 @@ module.exports = {
     profile_pic
   ) => {
     const queryString = `INSERT INTO public.users(
-      auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex)
+      auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex, profile_pic)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
     const params = [
       auth_id,
@@ -28,8 +28,8 @@ module.exports = {
     ];
     try {
       const result = await query(queryString, params);
-      console.log('params', params)
 
+      console.log(result)
       return result.rows;
     } catch (err) {
       throw err;
@@ -71,9 +71,9 @@ module.exports = {
   },
 
   selectUserFromDB: async (user_id) => {
-    const queryString = `SELECT id AS user_id, auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex, profile_pic
+    const queryString = `SELECT id AS id, auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex, profile_pic
     FROM public.users
-    WHERE user_id=$1`;
+    WHERE id=$1`;
 
     const params = [user_id];
 
