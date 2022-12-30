@@ -5,11 +5,12 @@ CREATE TABLE
     auth_id VARCHAR(200) DEFAULT null,
     firstname VARCHAR(50),
     lastname VARCHAR(50),
-    email VARCHAR(20),
-    user_password VARCHAR(20),
+    email VARCHAR(50),
+    user_password VARCHAR(60),
     weight_lbs integer,
     height_inches integer,
-    sex VARCHAR(50)
+    sex VARCHAR(50),
+    profile_pic VARCHAR(100)
   );
 
 CREATE TABLE
