@@ -6,13 +6,13 @@ const controller = require('../controllers');
 const { postNewUser, checkUser, checkEmail, getUser } = controller.user;
 
 //********GET********/
-router.get('/:auth_id', checkUser);
+router.get('/auth/:auth_id', checkUser);
 
 //********GET********/
 router.get('/:user_id', getUser);
 
 //********GET********/
-router.get('/:email', checkEmail);
+router.get('/email/:email', checkEmail);
 
 //********POST********/
 router.post('/create', postNewUser); //data in request body

@@ -52,7 +52,7 @@ module.exports = {
     const { email } = req.params;
     // console.log(`I'm in get user. User Id = ${auth_id}`)
     try {
-      const result = await checkEmailINDB(email);
+      const result = await checkEmailInDB(email);
       res.status(200).send(result);
 
     } catch (err) {

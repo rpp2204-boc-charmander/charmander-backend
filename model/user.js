@@ -43,6 +43,8 @@ module.exports = {
 
     const params = [auth_id];
 
+    console.log(`I'm in checkUserInDB`, auth_id)
+
     try {
       const result = await query(queryString, params);
       return result.rows[0];
@@ -58,6 +60,8 @@ module.exports = {
 
     const params = [email];
 
+    console.log(`I'm in checkEmailInDB`, email)
+
     try {
       const result = await query(queryString, params);
       return result.rows[0];
@@ -72,6 +76,9 @@ module.exports = {
     WHERE user_id=$1`;
 
     const params = [user_id];
+
+    console.log(`I'm in selectUserFromDB`, user_id)
+
 
     try {
       const result = await query(queryString, params);
