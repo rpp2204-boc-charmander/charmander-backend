@@ -9,7 +9,7 @@ const { postNewUser, checkUser, checkEmail, getUser } = controller.user;
 router.get('/auth/:auth_id', checkUser);
 
 //********GET********/
-router.get('/:user_id', getUser);
+router.get('/id/:user_id', getUser);
 
 //********GET********/
 router.get('/email/:email', checkEmail);

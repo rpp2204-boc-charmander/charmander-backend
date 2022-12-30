@@ -38,7 +38,6 @@ module.exports = {
 
   checkUser: async (req, res, next) => {
     const { auth_id } = req.params;
-    // console.log(`I'm in get user. User Id = ${auth_id}`)
     try {
       const result = await checkUserInDB(auth_id);
       res.status(200).send(result);
@@ -50,7 +49,6 @@ module.exports = {
 
   checkEmail: async (req, res, next) => {
     const { email } = req.params;
-    // console.log(`I'm in get user. User Id = ${auth_id}`)
     try {
       const result = await checkEmailInDB(email);
       res.status(200).send(result);
@@ -62,7 +60,6 @@ module.exports = {
 
   getUser: async (req, res, next) => {
     const { user_id } = req.params;
-    // console.log(`I'm in get user. User Id = ${auth_id}`)
     try {
       const result = await selectUserFromDB(user_id);
       res.status(200).send(result);
