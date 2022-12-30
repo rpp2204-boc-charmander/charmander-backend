@@ -139,17 +139,21 @@ module.exports = {
     }
   },
 
-  insertUserExerciseSetInDB: async (weight_lbs, reps, workout_exercise_id) => {
+  insertUserExerciseSetInDB: async (weights, reps, workout_exercise_id) => {
     const queryString = `INSERT INTO public.exercise_set(
       weight_lbs, reps, workout_exercise_id)
       VALUES ($1, $2, $3)`;
 
-    const params = [weight_lbs, reps, workout_exercise_id];
+    // const params = [weights, reps, workout_exercise_id];
 
     try {
-      const result = await query(queryString, params);
+      for (var i = 0; i < weights.length; i++) {
+        let params = [weights[i], reps[i], workout_exercise_id]
 
-      return result.rows;
+        await query(queryString, params)
+      }
+
+      return;
     } catch (err) {
       throw err;
     }

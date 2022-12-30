@@ -37,7 +37,7 @@ router.get('/workout/list', getUserWorkoutForDate); //query params: user_id, log
 router.post('/custom/create', postUserCustomExercise); //query params: user_id, custom_exercise, muscle_group_id
 
 //add a new set to an exercise
-router.post('/create/set', postExerciseSet); //query params: weight_lbs, reps, workout_exercise_id
+router.post('/create/set', postExerciseSet); //body params: weights: array, reps: array, workout_exercise_id
 
 //adding an exercise to a workout
 router.post('/create', postUserWorkoutExercise); //query params: user_id, exercise_id, log_date

@@ -91,9 +91,9 @@ module.exports = {
 
   postExerciseSet: async (req, res, next) => {
     try {
-      const { weight_lbs, reps, workout_exercise_id } = req.query;
+      const { weights, reps, workout_exercise_id } = req.body;
 
-      await insertUserExerciseSetInDB(weight_lbs, reps, workout_exercise_id);
+      await insertUserExerciseSetInDB(weights, reps, workout_exercise_id);
 
       res.sendStatus(201);
     } catch (err) {
