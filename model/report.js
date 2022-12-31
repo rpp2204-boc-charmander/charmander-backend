@@ -54,7 +54,7 @@ module.exports = {
       try {
         let {start, end} = findDates(date);
         let params = [id, start, end];
-        let queryString = `SELECT DISTINCT w.id, w.log_date, e.exercise, s.weight_lbs FROM workout_exercises AS w INNER JOIN exercises AS e ON (w.exercise_id = e.id) INNER JOIN exercise_set AS s ON (s.workout_exercise_id = w.id) WHERE (w.user_id = ${id}) AND (w.log_date >= '${start}' AND w.log_date <= '${end}') AND (s.weight_lbs = (SELECT MAX(weight_lbs) FROM exercise_set WHERE workout_exercise_id = w.id)) ORDER BY w.log_date`;
+        let queryString = `SELECT DISTINCT w.id, w.log_date, e.exercise, s.weight_lbs FROM workout_exercises AS w INNER JOIN exercises AS e ON (w.exercise_id = e.id) INNER JOIN exercise_set AS s ON (s.workout_exercise_id = w.id) WHERE (w.user_id = ${id}) And (w.is_complete = true) AND (w.log_date >= '${start}' AND w.log_date <= '${end}') AND (s.weight_lbs = (SELECT MAX(weight_lbs) FROM exercise_set WHERE workout_exercise_id = w.id)) ORDER BY w.log_date`;
         let result = await query(queryString);
         return result;
       } catch (err) {
