@@ -31,55 +31,55 @@ describe('Users API', () => {
     await db.end();
   });
 
-  // describe('GET ', () => {
-  //   describe('get user info based on some auth id', () => {
-  //     beforeAll(async () => {
-  //       const queryString = `INSERT INTO public.users(
-  //         auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex)
-  //         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
-  //       const params = [
-  //         auth_id,
-  //         firstname,
-  //         lastname,
-  //         email,
-  //         user_password,
-  //         weight_lbs,
-  //         height_inches,
-  //         sex,
-  //       ];
-  //       try {
-  //         await query(queryString, params);
-  //       } catch (err) {
-  //         throw err;
-  //       }
-  //     });
+  describe('GET ', () => {
+    describe('get user info based on some auth id', () => {
+      beforeAll(async () => {
+        const queryString = `INSERT INTO public.users(
+          auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
+        const params = [
+          auth_id,
+          firstname,
+          lastname,
+          email,
+          user_password,
+          weight_lbs,
+          height_inches,
+          sex,
+        ];
+        try {
+          await query(queryString, params);
+        } catch (err) {
+          throw err;
+        }
+      });
 
-  //     let user_id;
-  //     beforeAll(async () => {
-  //       const queryString = `SELECT id FROM public.users
-  //       WHERE auth_id=$1`;
+      let user_id;
+      beforeAll(async () => {
+        const queryString = `SELECT id FROM public.users
+        WHERE auth_id=$1`;
 
-  //       const params = [auth_id];
+        const params = [auth_id];
 
-  //       let retriveFromdb;
-  //       try {
-  //         retriveFromdb = await query(queryString, params);
-  //         user_id = retriveFromdb.rows[0].id;
-  //       } catch (err) {
-  //         throw err;
-  //       }
-  //     });
+        let retriveFromdb;
+        try {
+          retriveFromdb = await query(queryString, params);
+          user_id = retriveFromdb.rows[0].id;
+        } catch (err) {
+          throw err;
+        }
+      });
 
-  //     it('should get user id', async () => {
-  //       const res = await request(app).get(`/user/auth/${auth_id}/`);
+      it('should get user id', async () => {
+        const res = await request(app).get(`/user/auth/${auth_id}/`);
 
-  //       expect(res.statusCode).toBe(200);
-  //       // expect(res.body).toMatchObject(newUserInfo);
-  //       // expect(res.body.user_id).toEqual(user_id);
-  //       // expect(res.body.auth_id).toEqual(auth_id);
-  //     });
-  //   });
-  // });
+        expect(res.statusCode).toBe(200);
+        // expect(res.body).toMatchObject(newUserInfo);
+        // expect(res.body.user_id).toEqual(user_id);
+        // expect(res.body.auth_id).toEqual(auth_id);
+      });
+    });
+  });
 
   describe('POST ', () => {
     describe('make a new user', () => {

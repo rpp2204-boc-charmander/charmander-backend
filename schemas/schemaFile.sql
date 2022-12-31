@@ -72,9 +72,9 @@ CREATE TABLE
     log_date DATE NOT NULL,
     food integer REFERENCES foods (id),
     portion real,
-    measurements VARCHAR(100),
+    measurement VARCHAR(100),
     consumed boolean DEFAULT false
-  )
+  );
 
 
 
