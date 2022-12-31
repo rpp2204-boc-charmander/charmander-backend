@@ -370,3 +370,9 @@ VALUES
                     "weight": 1000.0
                 }
             ]', 'image goes here');
+
+--hardcoding user
+
+INSERT INTO public.users(
+      auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex)
+      VALUES ('dfbdfbdxbdbdbfg', 'john', 'doe', 'test@test.com', '$2a$10$2QjueIyd34KXHCPhvhO5Vud2aefE96jJsOLejC.C0pxriPSBdgWbW', 150, 70, 'male');
