@@ -41,24 +41,24 @@ module.exports = {
     }
   },
   logFood: async (req, res, next) => {
-    console.log(req.query);
     let allFoods;
-    let user = req.query.user;
-    let eaten = req.query.consumed;
-    let date = req.query.date;
+    let user = req.body.user;
+    let eaten = req.body.consumed;
+    let date = req.body.date.slice(0,10);
 
-    if(req.query.length){
-      allFoods = req.query;
+    if(req.body.items.length){
+      allFoods = req.body.items;
     } else {
-      allFoods = [req.query];
+      allFoods = [req.body.items];
     }
 
     let successfulAdds = 0;
 
-    await allFoods.map(async (food) => {
-      const { foodId, portion, measurement } = food;
+    await allFoods.map(async ({food, unit, amount}) => {
+      console.log(food);
+      const { foodId } = food;
       try {
-        const addedFood = await addUserFoods(user, date, foodId, portion, eaten, measurement);
+        const addedFood = await addUserFoods(user, date, foodId, amount, eaten, unit);
         successfulAdds++;
         if(successfulAdds === allFoods.length){
           res.send('Successful!');
