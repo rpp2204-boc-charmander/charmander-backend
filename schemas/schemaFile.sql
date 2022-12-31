@@ -4,11 +4,12 @@ CREATE TABLE
     auth_id VARCHAR(200) DEFAULT null,
     firstname VARCHAR(50),
     lastname VARCHAR(50),
-    email VARCHAR(20),
-    user_password VARCHAR(20),
+    email VARCHAR(50),
+    user_password VARCHAR(60),
     weight_lbs integer,
     height_inches integer,
-    sex VARCHAR(50)
+    sex VARCHAR(50),
+    profile_pic VARCHAR(100)
   );
 
 CREATE TABLE
@@ -48,8 +49,8 @@ CREATE TABLE
 CREATE TABLE
   daily_calories (
     id SERIAL NOT NULL PRIMARY KEY,
-    total_cals_burned integer,
-    total_cals_gained integer,
+    total_cals_burned integer DEFAULT 0,
+    total_cals_gained integer DEFAULT 0,
     log_date DATE NOT NULL,
     user_id integer REFERENCES users (id) ON DELETE CASCADE
   );
@@ -71,63 +72,9 @@ CREATE TABLE
     log_date DATE NOT NULL,
     food integer REFERENCES foods (id),
     portion real,
-    measurement VARCHAR(100),
+    measurements VARCHAR(100),
     consumed boolean DEFAULT false
-  );
-
--- INSERT default users
-INSERT INTO
-  public.users (
-    id,
-    firstname,
-    lastname,
-    email,
-    user_password,
-    weight_lbs,
-    height_inches,
-    sex
   )
-VALUES
-  (
-    1,
-    'Ash',
-    'Ketchum',
-    'pika2',
-    '123',
-    160,
-    65,
-    'male'
-  ),
-  (
-    2,
-    'Tom',
-    'Cruise',
-    'maverick123',
-    '123',
-    150,
-    67,
-    'male'
-  ),
-  (
-    3,
-    'Britney',
-    'Spears',
-    'babybaby5',
-    '123',
-    130,
-    64,
-    'female'
-  ),
-  (
-    4,
-    'Hafthor',
-    'Bjornsson',
-    'daMountain',
-    '123',
-    335,
-    81,
-    'male'
-  );
 
 
 
