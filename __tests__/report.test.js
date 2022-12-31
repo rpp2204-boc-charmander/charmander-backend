@@ -38,7 +38,7 @@ describe('Report API', () => {
     });
 
     it('Model Should be returning to controller', async () => {
-      let res = await request(app).get('/report/data/test/2022-12-28');
+      let res = await request(app).get('/report/data/test/"2022-12-28"');
       expect(res.body.calGained).toEqual(true);
       expect(res.body.calBurned).toEqual(true);
       expect(res.body.exerciseReports).toEqual(true);

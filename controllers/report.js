@@ -53,48 +53,52 @@ module.exports = {
         getCalBurned(id, date),
         getExerciseReports(id, date)
       ]);
-      let [result, coords] = [[], {}];
-      // Add in object for calories gained
-      let calG = {
-        maxRep: 0,
-        type: 'Calories Gained',
-        data: []
-      };
-      coords = turnIntoCoordinates(calGained.rows, 'gained');
-      calG.data = coords.array;
-      result.push(calG);
-      // Add in object for calories burned
-      let calB = {
-        maxRep: 0,
-        type: 'Calories Burned',
-        data: []
-      };
-      coords = turnIntoCoordinates(calBurned.rows, 'burned');
-      calB.data = coords.array;
-      result.push(calB);
-      // Add in objects for each exercise
-      let rows = exerciseReports.rows;
-      let erOrganizer = {};
-      for (let i = 0; i < rows.length; i++) {
-        if (erOrganizer[rows[i].exercise]) {
-          erOrganizer[rows[i].exercise].push(rows[i]);
-        } else {
-          erOrganizer[rows[i].exercise] = [rows[i]];
-        }
-      }
-      for (let exercise in erOrganizer) {
-        let object = {
+      if (id === 'test') {
+        let result ={calGained: calGained, calBurned: calBurned, exerciseReports: exerciseReports};
+        res.status(200).send(result);
+      } else {
+        let [result, coords] = [[], {}];
+        // Add in object for calories gained
+        let calG = {
           maxRep: 0,
-          type: exercise,
+          type: 'Calories Gained',
           data: []
         };
-        coords = turnIntoCoordinates(erOrganizer[exercise], 'exercise');
-        object.data = coords.array;
-        object.maxRep = coords.max;
-        result.push(object);
+        coords = turnIntoCoordinates(calGained.rows, 'gained');
+        calG.data = coords.array;
+        result.push(calG);
+        // Add in object for calories burned
+        let calB = {
+          maxRep: 0,
+          type: 'Calories Burned',
+          data: []
+        };
+        coords = turnIntoCoordinates(calBurned.rows, 'burned');
+        calB.data = coords.array;
+        result.push(calB);
+        // Add in objects for each exercise
+        let rows = exerciseReports.rows;
+        let erOrganizer = {};
+        for (let i = 0; i < rows.length; i++) {
+          if (erOrganizer[rows[i].exercise]) {
+            erOrganizer[rows[i].exercise].push(rows[i]);
+          } else {
+            erOrganizer[rows[i].exercise] = [rows[i]];
+          }
+        }
+        for (let exercise in erOrganizer) {
+          let object = {
+            maxRep: 0,
+            type: exercise,
+            data: []
+          };
+          coords = turnIntoCoordinates(erOrganizer[exercise], 'exercise');
+          object.data = coords.array;
+          object.maxRep = coords.max;
+          result.push(object);
+        }
+        res.status(200).send(result);
       }
-      //
-      res.status(200).send(result);
     } catch (err) {
       next(err);
     }
