@@ -32,7 +32,6 @@ module.exports = {
       const foodLog = [];
       returnedLog.map((log) => {
         let { id, food_name, nutrients, food_image, portion } = log;
-        log.nutrients = JSON.parse(nutrients);
         foodLog.push(log);
       });
       res.send(foodLog);
@@ -55,7 +54,6 @@ module.exports = {
     let successfulAdds = 0;
 
     await allFoods.map(async ({food, unit, amount}) => {
-      console.log(food);
       const { foodId } = food;
       try {
         const addedFood = await addUserFoods(user, date, foodId, amount, eaten, unit);
@@ -69,7 +67,7 @@ module.exports = {
     })
   },
   addFoodToDB: async (req, res, next) => {
-    const { label, foodId, nutrients, image } = req.query.food;
+    const { label, foodId, nutrients, image } = req.query;
     const stringedMeasurements = JSON.stringify(req.query.measures);
     const stringedNutrients = JSON.stringify(nutrients);
     const food_image = image || 'no image available';
@@ -81,7 +79,8 @@ module.exports = {
     }
   },
   updateLog: async (req, res, next) => {
-    const { logId, consumed, portion, measurement } = req.query;
+    const { logId, consumed, portion, measurement } = req.body;
+    console.log(logId, consumed, portion, measurement);
     try {
       const updated = await updateUserFoods(logId, consumed, portion, measurement);
       res.send('Updated Successfully');
@@ -90,7 +89,7 @@ module.exports = {
     }
   },
   deleteFromLog: async (req, res, next) => {
-    const { logId } = req.query;
+    const { logId } = req.body;
     try {
       const remove = await removeUserFoods(logId);
       res.send('Deleted Successfully');
