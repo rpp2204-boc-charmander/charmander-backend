@@ -1,7 +1,7 @@
 //add your controllers here
 //make sure you do error handling like so
 //if you take care of errors like the below example, the error middleware will take care of the error for you
-const { insertNewUserInDB, selectUserFromDB } = require('../model/user');
+const { insertNewUserInDB, selectUserFromDB, selectEmailFromDB } = require('../model/user');
 
 module.exports = {
   postNewUser: async (req, res, next) => {
@@ -17,7 +17,7 @@ module.exports = {
     } = req.body;
 
     try {
-      await insertNewUserInDB(
+      const request = await insertNewUserInDB(
         auth_id,
         firstname,
         lastname,
@@ -28,7 +28,7 @@ module.exports = {
         sex
       );
 
-      res.sendStatus(201);
+      res.send(request);
     } catch (err) {
       next(err);
     }
@@ -40,6 +40,17 @@ module.exports = {
     try {
       const result = await selectUserFromDB(auth_id);
 
+      res.status(200).send(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getEmail: async (req, res, next) => {
+    const { email } = req.params;
+
+    try {
+      const result = await selectEmailFromDB(email);
       res.status(200).send(result);
     } catch (err) {
       next(err);

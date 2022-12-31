@@ -203,3 +203,5 @@ VALUES
   ( 'Weighted Situps', 10),
   ( 'Front Plank', 10);
 
+
+
