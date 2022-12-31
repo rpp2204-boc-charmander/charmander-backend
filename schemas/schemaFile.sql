@@ -368,10 +368,10 @@ VALUES
                 }
             ]', 'image goes here');
 
---hardcoding user
+--hardcoding user DO NOT DELETE!!!!!!!!!!!!!!!
 INSERT INTO public.users(
       auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex)
-      VALUES ('dfbdfbdxbdbdbfg', 'john', 'doe', 'test@test.com', 'test', 150, 70, 'male');
+      VALUES ('dfbdfbdxbdbdbfg', 'john', 'doe', 'test@test.com', '$2a$10$2QjueIyd34KXHCPhvhO5Vud2aefE96jJsOLejC.C0pxriPSBdgWbW', 150, 70, 'male');
 
 INSERT INTO public.users(
       auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex)
