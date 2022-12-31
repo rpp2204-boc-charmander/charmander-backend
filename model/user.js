@@ -14,7 +14,7 @@ module.exports = {
   ) => {
     const queryString = `INSERT INTO public.users(
       auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex, profile_pic)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;`;
     const params = [
       auth_id,
       firstname,
@@ -88,5 +88,19 @@ module.exports = {
     }
   },
 
+  selectEmailFromDB: async (email) => {
+    const queryString = `SELECT email
+    FROM public.users
+      WHERE users.email=$1`
 
+    const params = [email];
+
+    try {
+      const result = await query(queryString, params);
+
+      return result.rows[0];
+    } catch (err) {
+      throw err;
+    }
+  },
 };

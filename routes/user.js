@@ -14,7 +14,10 @@ router.get('/id/:user_id', getUser);
 //********GET********/
 router.get('/email/:email', checkEmail);
 
+
 //********POST********/
 router.post('/create', postNewUser); //data in request body
+
+
 
 module.exports = router;

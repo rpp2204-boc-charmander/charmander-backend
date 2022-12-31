@@ -18,7 +18,7 @@ module.exports = {
     } = req.body;
 
     try {
-      await insertNewUserInDB(
+      const request = await insertNewUserInDB(
         auth_id,
         firstname,
         lastname,
@@ -30,7 +30,7 @@ module.exports = {
         profile_pic,
       );
 
-      res.sendStatus(201);
+      res.send(request);
     } catch (err) {
       next(err);
     }
@@ -64,6 +64,17 @@ module.exports = {
       const result = await selectUserFromDB(user_id);
       res.status(200).send(result);
 
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getEmail: async (req, res, next) => {
+    const { email } = req.params;
+
+    try {
+      const result = await selectEmailFromDB(email);
+      res.status(200).send(result);
     } catch (err) {
       next(err);
     }
