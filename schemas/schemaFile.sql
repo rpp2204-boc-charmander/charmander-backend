@@ -371,11 +371,11 @@ VALUES
 --hardcoding user
 INSERT INTO public.users(
       auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex)
-      VALUES ('dfbdfbdxbdbdbfg', 'john', 'doe', 'test@test.com', '$2a$10$2QjueIyd34KXHCPhvhO5Vud2aefE96jJsOLejC.C0pxriPSBdgWbW', 150, 70, 'male');
+      VALUES ('dfbdfbdxbdbdbfg', 'john', 'doe', 'test@test.com', 'test', 150, 70, 'male');
 
 INSERT INTO public.users(
       auth_id, firstname, lastname, email, user_password, weight_lbs, height_inches, sex)
-      VALUES('kr945lj598u6j', 'jane', 'doe', 'doe@test.com', 'd93jkjt005kkoijs09fj9TDFdioDfjo', 150, 60, 'female');
+      VALUES('kr945lj598u6j', 'jane', 'doe', 'doe@test.com', 'password', 150, 60, 'female');
 
 -- hardcoding workout exercises
 INSERT INTO public.workout_exercises(
