@@ -25,7 +25,7 @@ List of software, tools, etc needed:
 
 A step-by-step guide to setting up the development environment.
 
-\`\`\`bash
+```
 # clone the repository
 git clone [repo_url]
 
@@ -34,7 +34,7 @@ cd [project_name]
 
 # install dependencies
 npm install
-\`\`\`
+```
 
 ## API Routes
 
