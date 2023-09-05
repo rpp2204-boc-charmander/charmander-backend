@@ -1,6 +1,6 @@
-# Project Title
+# My Health Coach (Backend)
 
-A brief description of what this project does and who it's for.
+APIs for a health and fitness application made to easily track, plan and organize workouts and meals to aid in a much healthier lifestyle
 
 ## Table of Contents
 
@@ -17,9 +17,8 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 List of software, tools, etc needed:
-- Node.js (version X or above)
+- Node.js
 - Docker
-- etc.
 
 ### Installation
 
